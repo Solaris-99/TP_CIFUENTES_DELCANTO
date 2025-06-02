@@ -1,7 +1,6 @@
-import './App.css';
-import { Typography } from '@mui/material';
-import type { Patient } from './components/common/types/patient';
-import PatientView from './components/patient/PatientView';
+import type { Patient } from './components/common/types/patient'
+import PatientView from './components/patient/PatientView'
+import { Typography } from '@mui/material'
 
 function App() {
 	const patient1: Patient = {

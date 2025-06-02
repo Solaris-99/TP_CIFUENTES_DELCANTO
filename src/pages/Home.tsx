@@ -1,9 +1,9 @@
-import './App.css';
 import { Typography } from '@mui/material';
-import type { Patient } from './components/common/types/patient';
-import PatientView from './components/patient/PatientView';
+import type { Patient } from '../components/common/types/patient';
+import PatientView from '../components/patient/PatientView';
 
-function App() {
+const Home = () => {
+	// Mock data for patients in services
 	const patient1: Patient = {
 		id: 1,
 		name: 'pepito',
@@ -21,10 +21,11 @@ function App() {
 
 	return (
 		<>
+			<h1>Home</h1>
 			<Typography variant='h1'>Pasos</Typography>
 			<PatientView patients={mockPatients.patients} />
 		</>
 	);
-}
+};
 
-export default App;
+export default Home;

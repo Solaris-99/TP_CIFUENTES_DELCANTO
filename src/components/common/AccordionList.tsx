@@ -18,12 +18,9 @@ export default function AccordionList(props: {
 	title: string;
 	text: string;
 	addButtonText: string;
-}) 
-	
-
-{
+}) {
 	return (
-		<Container style={{margin:"1rem"}}>
+		<Container style={{ margin: '1rem' }}>
 			<Accordion defaultExpanded>
 				<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 					<Typography variant='h5'>{props.title}</Typography>

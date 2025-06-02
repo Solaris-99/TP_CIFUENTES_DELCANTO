@@ -1,21 +1,24 @@
-import { Box, Link, Paper } from '@mui/material';
+import { Box, Button, Paper } from '@mui/material';
 
 export default function Nav() {
 	return (
-		<Paper
-			elevation={2}
-			style={{
-				display: 'flex',
-				justifyContent: 'space-between',
-				alignContent: 'center',
-			}}
-		>
-			<p>Pasos_logo</p> {/**reemplazar */}
-			<Box display={'flex'} height={'fit-content'} marginY={'auto'}>
-				<Link href='#'>Pacientes</Link>
+		<Paper elevation={2} style={{ width: '100vw' }}>
+			<Box
+				style={{
+					display: 'flex',
+					width: '95%',
+					justifyContent: 'space-between',
+					marginLeft: 'auto',
+					marginRight: 'auto',
+				}}
+			>
+				<p>Pasos_logo</p> {/**reemplazar */}
+				<Box display={'flex'} height={'fit-content'} marginY={'auto'}>
+					<Button href='#'>Pacientes</Button>
 
-				<Link href='#'>Terapeutas</Link>
-				<Link href='#'>Salir</Link>
+					<Button href='#'>Terapeutas</Button>
+					<Button href='#'>Salir</Button>
+				</Box>
 			</Box>
 		</Paper>
 	);

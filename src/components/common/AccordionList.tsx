@@ -7,15 +7,23 @@ import {
 	Button,
 	Container,
 	List,
-	ListItem,
-	ListItemButton,
+	type ListItem,
+	type ListItemButton,
 	Typography,
 } from '@mui/material';
 import type { ReactElement } from 'react';
 
-export default function AccordionList(props: { items: ReactElement<typeof ListItemButton| typeof ListItem>[], title: string ,text: string, addButtonText: string }) {
+export default function AccordionList(props: {
+	items: ReactElement<typeof ListItemButton | typeof ListItem>[];
+	title: string;
+	text: string;
+	addButtonText: string;
+}) 
+	
+
+{
 	return (
-		<Container>
+		<Container style={{margin:"1rem"}}>
 			<Accordion defaultExpanded>
 				<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 					<Typography variant='h5'>{props.title}</Typography>
@@ -32,9 +40,7 @@ export default function AccordionList(props: { items: ReactElement<typeof ListIt
 						<Button>{props.addButtonText}</Button>
 					</Box>
 
-					<List>
-						{props.items}
-					</List>
+					<List>{props.items}</List>
 				</AccordionDetails>
 			</Accordion>
 		</Container>

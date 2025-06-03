@@ -1,8 +1,8 @@
 export type Therapist = {
 	id: number;
-	date_creation: Date;
+	dateCreation: Date;
 	email: string;
 	name: string;
 	title: string;
-	is_coordinator: boolean;
+	isCoordinator: boolean;
 };

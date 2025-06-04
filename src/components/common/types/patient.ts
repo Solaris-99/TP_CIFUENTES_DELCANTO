@@ -1,6 +1,6 @@
 export type Patient = {
 	id: number;
-	date_creation: Date;
+	dateCreation: Date;
 	name: string;
 	dni?: number;
 	diagnosis?: string;

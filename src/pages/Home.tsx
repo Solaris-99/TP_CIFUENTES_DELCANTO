@@ -8,26 +8,26 @@ const Home = () => {
 	const patient1: Patient = {
 		id: 1,
 		name: 'pepito',
-		date_creation: new Date(),
+		dateCreation: new Date(),
 	};
 	const patient2: Patient = {
 		id: 2,
 		name: 'juanita',
-		date_creation: new Date(),
+		dateCreation: new Date(),
 	};
 	const ther1: Therapist = {
 		id: 1,
 		name: 'juancito',
-		date_creation: new Date(),
-		is_coordinator: false,
+		dateCreation: new Date(),
+		isCoordinator: false,
 		email: 'jj@gmail.com',
 		title: 'psicologo',
 	};
 	const ther2: Therapist = {
 		id: 1,
 		name: 'pancracio',
-		date_creation: new Date(),
-		is_coordinator: false,
+		dateCreation: new Date(),
+		isCoordinator: false,
 		email: 'pan@gmail.com',
 		title: 'psicologo',
 	};
@@ -42,11 +42,14 @@ const Home = () => {
 
 			<AccordionList
 				items={mockPatients.map((e) => (
-					<ListItemButton key={e.id}>{e.name}</ListItemButton>
+					<ListItemButton key={e.id} href={`/${e.id}`}>
+						{e.name}
+					</ListItemButton>
 				))}
 				text='Listado de todos los pacientes'
 				title='Pacientes'
 				addButtonText='Agregar'
+				defaultExpanded
 			/>
 			<AccordionList
 				items={mockTher.map((e) => (

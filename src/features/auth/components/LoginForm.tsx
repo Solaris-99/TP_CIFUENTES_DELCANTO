@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'; // Necesitas instalar esta dependencia
-import { Alert, Box, Button, TextField, Typography } from '@mui/material';
+import { Alert, Button, TextField } from '@mui/material';
 import { type FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { type LoginFormValues, loginSchema } from '../schemas/loginSchema'; // Importa el esquema Zod
@@ -37,20 +37,7 @@ const LoginForm: FC<LoginFormProps> = ({ onSubmitSuccess }) => {
 	};
 
 	return (
-		<Box
-			sx={{
-				maxWidth: 400,
-				mx: 'auto',
-				mt: 5,
-				p: 3,
-				borderRadius: 2,
-				boxShadow: 2,
-			}}
-		>
-			<Typography variant='h4' component='h1' textAlign='center' gutterBottom>
-				Iniciar Sesión
-			</Typography>
-
+		<>
 			{error && (
 				<Alert severity='error' sx={{ mb: 2 }}>
 					{error}
@@ -84,7 +71,7 @@ const LoginForm: FC<LoginFormProps> = ({ onSubmitSuccess }) => {
 					type='submit'
 					variant='contained'
 					fullWidth
-					sx={{ mt: 2 }}
+					sx={{ mt: 10 }}
 					/* TODO: Create a loading hook */
 					/* disabled={isLoading} */
 				>
@@ -92,13 +79,7 @@ const LoginForm: FC<LoginFormProps> = ({ onSubmitSuccess }) => {
 					{/* {isLoading ? <CircularProgress size={24} color="inherit" /> : "Iniciar Sesión"} */}
 				</Button>
 			</form>
-
-			<Typography variant='body2' textAlign='center' sx={{ mt: 3 }}>
-				<a href='.' style={{ textDecoration: 'none', color: '#1976d2' }}>
-					¿Olvidaste tu contraseña?
-				</a>
-			</Typography>
-		</Box>
+		</>
 	);
 };
 

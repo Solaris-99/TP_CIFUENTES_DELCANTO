@@ -1,19 +1,19 @@
 export type LoginCredentials = {
-  email: string;
-  password: string;
+	email: string;
+	password: string;
 };
 
 export type RegisterData = {
-  name: string;
-  email: string;
-  password: string;
+	name: string;
+	email: string;
+	password: string;
 };
 
 export type UserRole = 'coordinator' | 'therapist';
 
 export type User = {
-  id: number;
-  email: string;
-  name: string;
-  role: UserRole;
+	id: number;
+	email: string;
+	name: string;
+	role: UserRole;
 };

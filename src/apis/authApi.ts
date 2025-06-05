@@ -1,10 +1,10 @@
-import api from './axios';
 import type {
 	LoginCredentials,
 	RegisterData,
 	User,
-	UserRole
+	UserRole,
 } from '@/features/auth/types/authTypes';
+import api from './axios';
 
 interface AuthSuccessResponse {
 	token: string;
@@ -21,9 +21,7 @@ interface AuthSuccessResponse {
 }; */
 
 export const authEndpoints = {
-	login: (
-		credentials: LoginCredentials
-	) => {
+	login: (credentials: LoginCredentials) => {
 		return {
 			// Mocked response for demonstration purposes
 			data: {
@@ -34,7 +32,7 @@ export const authEndpoints = {
 					name: 'Mocked User',
 					role: 'coordinator' as UserRole,
 				},
-			}
+			},
 		};
-	}
+	},
 };

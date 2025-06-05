@@ -1,13 +1,13 @@
 import { authEndpoints } from '@/apis/authApi';
-import type { LoginCredentials, User } from '../types/authTypes';
-import { isAxiosError } from 'axios';
 import type { ApiErrorResponse } from '@/apis/axios';
+import { isAxiosError } from 'axios';
+import type { LoginCredentials, User } from '../types/authTypes';
 
 export const loginUser = async (
 	credentials: LoginCredentials
 ): Promise<User> => {
 	try {
-		const response = await authEndpoints.login(credentials); 
+		const response = await authEndpoints.login(credentials);
 		const { token, user: apiUser } = response.data;
 
 		// TODO: Save all in store
@@ -25,7 +25,8 @@ export const loginUser = async (
 		let message = 'Error al iniciar sesión.';
 		if (isAxiosError<ApiErrorResponse>(error)) {
 			if (error.response?.status === 401) {
-				message = 'Credenciales inválidas. Por favor, verifica tu email y contraseña.';
+				message =
+					'Credenciales inválidas. Por favor, verifica tu email y contraseña.';
 			} else {
 				message = error.response?.data?.message || message;
 			}

@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router';
 
 const Login: FC = () => {
 	const navigate = useNavigate();
-	
+
 	return (
 		<>
-			<LoginForm onSubmitSuccess={() => navigate('/')}/>
+			<LoginForm onSubmitSuccess={() => navigate('/')} />
 		</>
 	);
 };

@@ -1,7 +1,13 @@
-const Login = () => {
+import LoginForm from 'features/auth/components/LoginForm';
+import type { FC } from 'react';
+import { useNavigate } from 'react-router';
+
+const Login: FC = () => {
+	const navigate = useNavigate();
+	
 	return (
 		<>
-			<h1>Login Page</h1>
+			<LoginForm onSubmitSuccess={() => navigate('/')}/>
 		</>
 	);
 };

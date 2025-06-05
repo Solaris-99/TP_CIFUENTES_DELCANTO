@@ -1,9 +1,9 @@
+import Home from '@/pages/Home';
+import Login from '@/pages/Login';
+import NotFound from '@/pages/NotFound';
+import Patient from '@/pages/Patient';
+import Program from '@/pages/Program';
 import { BrowserRouter, Route, Routes } from 'react-router';
-import Home from '../../pages/Home';
-import Login from '../../pages/Login';
-import NotFound from '../../pages/NotFound';
-import Patient from '../../pages/Patient';
-import Program from '../../pages/Program';
 import Layout from './Layout';
 import ProtectedRoute from './utils/ProtectedRoute';
 

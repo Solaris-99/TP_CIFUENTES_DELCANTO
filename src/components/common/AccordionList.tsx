@@ -16,9 +16,10 @@ import type { ReactElement } from 'react';
 export default function AccordionList(props: {
 	items: ReactElement<typeof ListItemButton | typeof ListItem>[];
 	title: string;
-	text: string;
-	addButtonText: string;
+	text?: string;
 	defaultExpanded?: boolean;
+	addButton?: boolean;
+	buttonFunction?: CallableFunction;
 }) {
 	return (
 		<Container style={{ margin: '1rem' }}>
@@ -34,8 +35,10 @@ export default function AccordionList(props: {
 						width={'95%'}
 						marginX='auto'
 					>
-						<Typography>{props.text}</Typography>
-						<Button>{props.addButtonText}</Button>
+						{props.text !== null ? <Typography>{props.text}</Typography> : null}
+						{props.addButton && props.buttonFunction ? (
+							<Button onClick={props.buttonFunction()}>Agregar</Button>
+						) : null}
 					</Box>
 
 					<List>{props.items}</List>

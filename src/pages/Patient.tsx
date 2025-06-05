@@ -5,7 +5,7 @@ import type { Program } from '../components/common/types/program';
 
 export default function Patient() {
 	//considerar cambiar los valores de estado
-	const params = useParams(); //patient-id
+	const params = useParams(); //patientId
 	//mock
 	const patientName = 'pepito';
 	const programs: Program[] = [
@@ -13,20 +13,20 @@ export default function Patient() {
 			id: 1,
 			name: 'Vocales',
 			dateCreation: new Date(),
-			status: 'finished',
-			lastUpdated: new Date(),
-			antecedent: 'asdasd',
-		},
-		{
-			id: 1,
-			name: 'bcf',
-			dateCreation: new Date(),
 			status: 'wip',
 			lastUpdated: new Date(),
 			antecedent: 'asdasd',
 		},
 		{
-			id: 1,
+			id: 2,
+			name: 'bcf',
+			dateCreation: new Date(),
+			status: 'finished',
+			lastUpdated: new Date(),
+			antecedent: 'asdasd',
+		},
+		{
+			id: 3,
 			name: 'ghj',
 			dateCreation: new Date(),
 			status: 'suspended',
@@ -35,38 +35,38 @@ export default function Patient() {
 		},
 	];
 
-	const programsCompleted = programs.filter((e) => e.status === 'finished');
-	const currentPrograms = programs.filter((e) => e.status === 'wip');
-	const programsSuspended = programs.filter((e) => e.status === 'suspended');
+	const finishedPrograms = programs.filter((e) => e.status === 'finished');
+	const wipPrograms = programs.filter((e) => e.status === 'wip');
+	const suspendedPrograms = programs.filter((e) => e.status === 'suspended');
 
 	return (
 		<>
 			<Typography variant='h2'>Programación de {patientName}</Typography>
 			<p>{params.patientId}</p>
 			<AccordionList
-				items={currentPrograms.map((e) => (
-					<ListItemButton key={e.id}>{e.name}</ListItemButton>
+				items={wipPrograms.map((e) => (
+					<ListItemButton href={`/${params.patientId}/${e.id}`} key={e.id}>
+						{e.name}
+					</ListItemButton>
 				))}
-				text='Listado de todos los programas en enseñanza'
 				title='En enseñanza'
-				addButtonText='Agregar'
 				defaultExpanded
 			/>
 			<AccordionList
-				items={programsSuspended.map((e) => (
-					<ListItemButton key={e.id}>{e.name}</ListItemButton>
+				items={suspendedPrograms.map((e) => (
+					<ListItemButton href={`/${params.patientId}/${e.id}`} key={e.id}>
+						{e.name}
+					</ListItemButton>
 				))}
-				text='Listado de todos los programas suspendidos'
 				title='Suspendidos'
-				addButtonText='Agregar'
 			/>
 			<AccordionList
-				items={programsCompleted.map((e) => (
-					<ListItemButton key={e.id}>{e.name}</ListItemButton>
+				items={finishedPrograms.map((e) => (
+					<ListItemButton href={`/${params.patientId}/${e.id}`} key={e.id}>
+						{e.name}
+					</ListItemButton>
 				))}
-				text='Listado de todos los programas completados'
 				title='Completos'
-				addButtonText='Agregar'
 			/>
 		</>
 	);

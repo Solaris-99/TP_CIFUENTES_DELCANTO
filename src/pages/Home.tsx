@@ -1,7 +1,7 @@
+import AccordionList from '@/components/common/AccordionList';
+import type { Patient } from '@/components/common/types/patient';
+import type { Therapist } from '@/components/common/types/therapist';
 import { ListItemButton, Typography } from '@mui/material';
-import AccordionList from '../components/common/AccordionList';
-import type { Patient } from '../components/common/types/patient';
-import type { Therapist } from '../components/common/types/therapist';
 
 const Home = () => {
 	// Mock data for patients in services
@@ -24,7 +24,7 @@ const Home = () => {
 		title: 'psicologo',
 	};
 	const ther2: Therapist = {
-		id: 1,
+		id: 2,
 		name: 'pancracio',
 		dateCreation: new Date(),
 		isCoordinator: false,
@@ -37,27 +37,34 @@ const Home = () => {
 
 	return (
 		<>
-			<h1>Home</h1>
-			<Typography variant='h1'>Pasos</Typography>
-
+			<Typography variant='h2' marginX={'auto'} width={'fit-content'}>
+				Bienvenido, terapeuta
+			</Typography>{' '}
+			{/** poner el nombre*/}
 			<AccordionList
 				items={mockPatients.map((e) => (
-					<ListItemButton key={e.id} href={`/${e.id}`}>
+					<ListItemButton key={`p-${e.id}`} href={`/${e.id}`}>
 						{e.name}
 					</ListItemButton>
 				))}
 				text='Listado de todos los pacientes'
 				title='Pacientes'
-				addButtonText='Agregar'
 				defaultExpanded
+				addButton
+				buttonFunction={() => {
+					console.log('form de paciente');
+				}}
 			/>
 			<AccordionList
 				items={mockTher.map((e) => (
-					<ListItemButton key={e.id}>{e.name}</ListItemButton>
+					<ListItemButton key={`t-${e.id}`}>{e.name}</ListItemButton>
 				))}
 				text='Listado de todos los terapeutas'
 				title='Terapeutas'
-				addButtonText='Agregar'
+				addButton
+				buttonFunction={() => {
+					console.log('form de terapueta');
+				}}
 			/>
 		</>
 	);

@@ -1,6 +1,8 @@
+import logo from '@/assets/images/logo-removebg-preview.png';
 import { Box, Button, Paper } from '@mui/material';
+import { Link } from 'react-router';
 
-export default function Nav() {
+const Nav = () => {
 	return (
 		<Paper elevation={2} style={{ width: '100vw' }}>
 			<Box
@@ -8,18 +10,25 @@ export default function Nav() {
 					display: 'flex',
 					width: '95%',
 					justifyContent: 'space-between',
+					position: 'sticky',
+					top: 0,
+					left: 0,
 					marginLeft: 'auto',
 					marginRight: 'auto',
+					zIndex: 999,
 				}}
 			>
-				<p>Pasos_logo</p> {/**reemplazar */}
+				<Link to='/'>
+					<img src={logo} alt='Pasos' height={64} width={64} />
+				</Link>
 				<Box display={'flex'} height={'fit-content'} marginY={'auto'}>
-					<Button href='#'>Pacientes</Button>
-
-					<Button href='#'>Terapeutas</Button>
+					<Button href='/'>Pacientes</Button>
+					<Button href='/'>Terapeutas</Button>
 					<Button href='#'>Salir</Button>
 				</Box>
 			</Box>
 		</Paper>
 	);
-}
+};
+
+export default Nav;

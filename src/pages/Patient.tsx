@@ -1,9 +1,9 @@
-import { ListItemButton, Typography } from '@mui/material';
+import AccordionList from '@/components/common/AccordionList';
+import type { Program } from '@/components/common/types/program';
+import { Button, ListItem, ListItemButton, Typography } from '@mui/material';
 import { useParams } from 'react-router';
-import AccordionList from '../components/common/AccordionList';
-import type { Program } from '../components/common/types/program';
 
-export default function Patient() {
+const Patient = () => {
 	//considerar cambiar los valores de estado
 	const params = useParams(); //patientId
 	//mock
@@ -41,22 +41,45 @@ export default function Patient() {
 
 	return (
 		<>
-			<Typography variant='h2'>Programación de {patientName}</Typography>
-			<p>{params.patientId}</p>
+			<Typography variant='h2' marginX={'auto'} width={'fit-content'}>
+				Programación de {patientName}
+			</Typography>
 			<AccordionList
 				items={wipPrograms.map((e) => (
-					<ListItemButton href={`/${params.patientId}/${e.id}`} key={e.id}>
-						{e.name}
-					</ListItemButton>
+					<ListItem key={e.id}>
+						<ListItemButton href={`/${params.patientId}/${e.id}`}>
+							{e.name}
+						</ListItemButton>
+						<Button
+							onClick={() => {
+								console.log(`reanudado: ${e.id}`);
+							}}
+						>
+							Suspender
+						</Button>
+					</ListItem>
 				))}
 				title='En enseñanza'
 				defaultExpanded
+				addButton
+				buttonFunction={() => {
+					'form de programa';
+				}}
 			/>
 			<AccordionList
 				items={suspendedPrograms.map((e) => (
-					<ListItemButton href={`/${params.patientId}/${e.id}`} key={e.id}>
-						{e.name}
-					</ListItemButton>
+					<ListItem key={e.id}>
+						<ListItemButton href={`/${params.patientId}/${e.id}`}>
+							{e.name}
+						</ListItemButton>
+						<Button
+							onClick={() => {
+								console.log(`reanudado: ${e.id}`);
+							}}
+						>
+							Reanudar
+						</Button>
+					</ListItem>
 				))}
 				title='Suspendidos'
 			/>
@@ -70,4 +93,5 @@ export default function Patient() {
 			/>
 		</>
 	);
-}
+};
+export default Patient;

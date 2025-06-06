@@ -1,6 +1,11 @@
+import AccordionList from '@/components/common/AccordionList';
+import type { ProgramItem } from '@/components/common/types/programItem';
+import type { Response } from '@/components/common/types/response';
 import {
 	Box,
 	Button,
+	Container,
+	ListItem,
 	ListItemButton,
 	Paper,
 	Stack,
@@ -8,13 +13,10 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useParams } from 'react-router';
-import AccordionList from '../components/common/AccordionList';
-import type { ProgramItem } from '../components/common/types/programItem';
-import type { Response } from '../components/common/types/response';
 
-export default function Program() {
+const Program = () => {
 	const params = useParams(); // programId
-	const [selectedItem, setSelectedItem] = useState(0);
+	const [responses, setResponses] = useState<Response[]>([]);
 
 	const programName = 'Vocales';
 	const programItems: ProgramItem[] = [
@@ -54,10 +56,11 @@ export default function Program() {
 			status: 'suspended',
 		},
 	];
+
 	const wipItems = programItems.filter((e) => e.status === 'wip');
 	const suspendedItems = programItems.filter((e) => e.status === 'suspended');
 	const finishedItems = programItems.filter((e) => e.status === 'finished');
-	const responses: Response[] = [
+	const responsesMock: Response[] = [
 		{ id: 1, response: '+', dateCreation: new Date() },
 		{ id: 2, response: '-', dateCreation: new Date() },
 		{ id: 3, response: 'nr', dateCreation: new Date() },
@@ -65,29 +68,71 @@ export default function Program() {
 		{ id: 5, response: 'nr', dateCreation: new Date() },
 	];
 
+	const handleItems = (e) => {
+		//getResponses(e.id)
+		setResponses(responsesMock);
+	};
+
 	return (
 		<>
-			<Typography variant='h2'>{programName}</Typography>
+			<Typography variant='h2' marginX={'auto'} width={'fit-content'}>
+				{programName}
+			</Typography>
+			<Container style={{ margin: '1rem' }}>
+				<Paper
+					style={{
+						padding: '1rem',
+						display: 'flex',
+						justifyContent: 'space-between',
+					}}
+				>
+					<Typography>Antecedente del programa</Typography>
+					{/** Handle status accordingly and change text based on status. programStatusHandler? */}
+					<Button>Suspeder</Button>
+				</Paper>
+			</Container>
 			<Box marginBottom={'3rem'} display={'flex'}>
 				<Box width={'75%'}>
 					<AccordionList
 						items={wipItems.map((e) => (
-							<ListItemButton key={`iw-${e.id}`}>{e.name}</ListItemButton>
+							<ListItem key={`iw-${e.id}`}>
+								<ListItemButton onClick={handleItems}>{e.name}</ListItemButton>
+								<Button
+									onClick={() => {
+										console.log(`suspendido: ${e.id}`);
+									}}
+								>
+									Suspender
+								</Button>
+							</ListItem>
 						))}
 						text='Items en enseñanza'
 						title='En enseñanza'
 						defaultExpanded
+						addButton
+						buttonFunction={() => console.log('form de item')}
 					/>
 					<AccordionList
 						items={suspendedItems.map((e) => (
-							<ListItemButton key={`is-${e.id}`}>{e.name}</ListItemButton>
+							<ListItem key={`is-${e.id}`}>
+								<ListItemButton onClick={handleItems}>{e.name}</ListItemButton>
+								<Button
+									onClick={() => {
+										console.log(`reanudado: ${e.id}`);
+									}}
+								>
+									Reanudar
+								</Button>
+							</ListItem>
 						))}
 						text='Items suspendidos'
 						title='Suspendidos'
 					/>
 					<AccordionList
 						items={finishedItems.map((e) => (
-							<ListItemButton key={`if-${e.id}`}>{e.name}</ListItemButton>
+							<ListItemButton onClick={handleItems} key={`if-${e.id}`}>
+								{e.name}
+							</ListItemButton>
 						))}
 						text='Items suspendidos'
 						title='Completos'
@@ -116,7 +161,14 @@ export default function Program() {
 				</Box>
 			</Box>
 			<Box>
-				<Typography variant='h4'>Otros programas activos</Typography>
+				<Typography
+					variant='h4'
+					marginX={'auto'}
+					width={'fit-content'}
+					marginY={'1rem'}
+				>
+					Otros programas activos
+				</Typography>
 				{/**Solo programas activos */}
 				<Stack
 					direction='row'
@@ -126,11 +178,19 @@ export default function Program() {
 						alignItems: 'center',
 					}}
 				>
-					<Button href='#'>Programa 1</Button>
-					<Button href='#'>Programa 2</Button>
-					<Button href='#'>Programa 3</Button>
+					<Button href='#' variant='contained'>
+						Programa 1
+					</Button>
+					<Button href='#' variant='contained'>
+						Programa 2
+					</Button>
+					<Button href='#' variant='contained'>
+						Programa 3
+					</Button>
 				</Stack>
 			</Box>
 		</>
 	);
-}
+};
+
+export default Program;

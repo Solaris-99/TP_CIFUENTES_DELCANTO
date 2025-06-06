@@ -1,6 +1,9 @@
+import Router from '@/components/common/Router.tsx';
+import { theme } from '@/configs/theme';
+import { ThemeProvider } from '@emotion/react';
+import { CssBaseline } from '@mui/material';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import Router from './components/common/Router.tsx';
 
 const rootElement = document.getElementById('root');
 
@@ -10,6 +13,9 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
 	<StrictMode>
-		<Router />
+		<ThemeProvider theme={theme}>
+			<CssBaseline />
+			<Router />
+		</ThemeProvider>
 	</StrictMode>
 );

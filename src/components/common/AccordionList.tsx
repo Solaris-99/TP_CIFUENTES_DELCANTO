@@ -13,14 +13,14 @@ import {
 } from '@mui/material';
 import type { ReactElement } from 'react';
 
-export default function AccordionList(props: {
+const AccordionList = (props: {
 	items: ReactElement<typeof ListItemButton | typeof ListItem>[];
 	title: string;
 	text?: string;
 	defaultExpanded?: boolean;
 	addButton?: boolean;
-	buttonFunction?: CallableFunction;
-}) {
+	buttonFunction?: React.MouseEventHandler;
+}) => {
 	return (
 		<Container style={{ margin: '1rem' }}>
 			<Accordion defaultExpanded={props.defaultExpanded}>
@@ -37,7 +37,9 @@ export default function AccordionList(props: {
 					>
 						{props.text !== null ? <Typography>{props.text}</Typography> : null}
 						{props.addButton && props.buttonFunction ? (
-							<Button onClick={props.buttonFunction()}>Agregar</Button>
+							<Button variant='outlined' onClick={props.buttonFunction}>
+								Agregar
+							</Button>
 						) : null}
 					</Box>
 
@@ -46,4 +48,6 @@ export default function AccordionList(props: {
 			</Accordion>
 		</Container>
 	);
-}
+};
+
+export default AccordionList;

@@ -3,7 +3,7 @@ import Login from '@/pages/Login';
 import NotFound from '@/pages/NotFound';
 import Patient from '@/pages/Patient';
 import Program from '@/pages/Program';
-import Therapist from '@/pages/Therapist';
+import Therapist from '@/pages/TherapistView';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import Layout from './Layout';
 import ProtectedRoute from './utils/ProtectedRoute';

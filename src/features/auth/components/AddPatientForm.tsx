@@ -5,7 +5,6 @@ import {
 	InputLabel,
 	MenuItem,
 	Modal,
-	type ModalOwnProps,
 	Paper,
 	Select,
 	type SelectChangeEvent,

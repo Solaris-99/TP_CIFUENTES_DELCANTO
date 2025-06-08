@@ -1,20 +1,17 @@
 import AccordionList from '@/components/common/AccordionList';
 import type { Patient } from '@/components/common/types/patient';
 import type { Therapist } from '@/components/common/types/therapist';
+import AddPatientForm from '@/features/auth/components/AddPatientForm';
 import {
 	Box,
 	Button,
 	FormControl,
 	FormLabel,
 	Input,
-	InputLabel,
 	ListItem,
 	ListItemButton,
-	MenuItem,
 	Modal,
 	Paper,
-	Select,
-	type SelectChangeEvent,
 	Typography,
 } from '@mui/material';
 import { useState } from 'react';
@@ -29,8 +26,8 @@ const modalStyle: React.CSSProperties = {
 const TherapistView = () => {
 	const [modalPatientOpen, setModalPatientOpen] = useState(false);
 	const [modalTherapistOpen, setModalTherapistOpen] = useState(false);
-	const [selectedPatientId, setSelectedPatientId] = useState('');
 	const [selectedTherapist, setSelectedTherapist] = useState<Therapist>();
+	const [patients, setPatients] = useState<Patient[]>([]);
 
 	/**
 	 * when selecting therapist
@@ -93,6 +90,7 @@ const TherapistView = () => {
 							<ListItemButton
 								onClick={() => {
 									setSelectedTherapist(e);
+									setPatients(mockPatients);
 								}}
 							>
 								{e.name}
@@ -113,7 +111,7 @@ const TherapistView = () => {
 							? `Pacientes de ${selectedTherapist.name}`
 							: 'Selecciona un terapeuta'
 					}
-					items={mockPatients.map((e) => (
+					items={patients.map((e) => (
 						<ListItem key={`p-${e.id}`}>
 							<ListItemButton href={`/${e.id}`}>{e.name}</ListItemButton>
 							<Button>Remover</Button>
@@ -124,38 +122,16 @@ const TherapistView = () => {
 					buttonFunction={() => setModalPatientOpen(true)}
 				/>
 			</Box>
-			<Modal
-				id='modal-patient'
-				style={modalStyle}
+			<AddPatientForm
+				onSubmit={(e) => {
+					e.preventDefault();
+					console.log('agregado');
+				}}
 				open={modalPatientOpen}
+				style={modalStyle}
+				patients={mockPatients}
 				onClose={() => setModalPatientOpen(false)}
-			>
-				<Paper style={{ padding: '1rem' }}>
-					<Typography variant='h4'>Agrega un paciente</Typography>
-					<FormControl style={{ marginTop: '1rem' }} fullWidth>
-						<InputLabel id='select-patient-label'>Paciente</InputLabel>
-						<Select
-							labelId='select-patient-label'
-							id='select-patient'
-							value={selectedPatientId}
-							label='Age'
-							onChange={(e: SelectChangeEvent) => {
-								setSelectedPatientId(e.target.value);
-							}}
-							style={{ margin: '1rem' }}
-						>
-							{mockPatients.map((e) => (
-								<MenuItem key={`mip-${e.id}`} value={`${e.id}`}>
-									{e.name}
-								</MenuItem>
-							))}
-						</Select>
-						<Button style={{ width: 'fit-content', margin: '5px auto' }}>
-							Agregar
-						</Button>
-					</FormControl>
-				</Paper>
-			</Modal>
+			/>
 			<Modal
 				id='modal-therapist'
 				style={modalStyle}

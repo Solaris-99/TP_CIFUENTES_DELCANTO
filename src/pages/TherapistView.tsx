@@ -1,16 +1,13 @@
 import AccordionList from '@/components/common/AccordionList';
 import type { Patient } from '@/components/common/types/patient';
 import type { Therapist } from '@/components/common/types/therapist';
-import AddPatientForm from '@/features/auth/components/AddPatientForm';
+import AddPatientForm from '@/features/patient/components/AddPatientForm';
+import AddTherapistModal from '@/features/therapist/components/AddTherapistModal';
 import {
 	Box,
 	Button,
-	FormControl,
-	FormLabel,
-	Input,
 	ListItem,
 	ListItemButton,
-	Modal,
 	Paper,
 	Typography,
 } from '@mui/material';
@@ -132,44 +129,12 @@ const TherapistView = () => {
 				patients={mockPatients}
 				onClose={() => setModalPatientOpen(false)}
 			/>
-			<Modal
-				id='modal-therapist'
-				style={modalStyle}
+			<AddTherapistModal
 				open={modalTherapistOpen}
+				style={modalStyle}
 				onClose={() => setModalTherapistOpen(false)}
-			>
-				<Paper style={{ padding: '2rem' }}>
-					<Typography variant='h4'>Agrega un terapeuta</Typography>
-					<FormControl style={{ marginTop: '1rem' }} fullWidth>
-						<FormLabel>Email</FormLabel>
-						<Input
-							id='th-add-email'
-							color='primary'
-							size='medium'
-							type='email'
-						/>
-						<FormLabel>Password</FormLabel>
-						<Input
-							id='th-add-pass'
-							color='primary'
-							size='medium'
-							type='password'
-						/>
-						<FormLabel>Nombre completo</FormLabel>
-						<Input id='th-add-name' color='primary' size='medium' type='text' />
-						<FormLabel>Titulo</FormLabel>
-						<Input
-							id='th-add-title'
-							color='primary'
-							size='medium'
-							type='text'
-						/>
-						<Button style={{ marginTop: '1rem' }} type='submit'>
-							Agregar
-						</Button>
-					</FormControl>
-				</Paper>
-			</Modal>
+				onSubmitSuccess={() => console.log('terapeuta creado')}
+			/>
 		</>
 	);
 };

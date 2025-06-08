@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { type FC, useState } from 'react';
 
-interface patientFormProps {
+interface PatientFormProps {
 	patients: Patient[];
 	open: boolean;
 	onClose?: (() => void) | undefined;
@@ -20,7 +20,7 @@ interface patientFormProps {
 	onSubmit: React.FormEventHandler<HTMLFormElement> | undefined;
 }
 
-const AddPatientForm: FC<patientFormProps> = ({
+const AddPatientForm: FC<PatientFormProps> = ({
 	patients,
 	open,
 	onClose,
@@ -54,6 +54,7 @@ const AddPatientForm: FC<patientFormProps> = ({
 						</Select>
 						<Button
 							type='submit'
+							variant='contained'
 							style={{ width: 'fit-content', margin: '5px auto' }}
 						>
 							Agregar

@@ -9,6 +9,19 @@ Pasos Backoffice es un proyecto académico para la escuela DaVinci de una aplica
   - Emanuel Mauricio Cifuentes
   - Cristian Daniel Del Canto
 
+## Acuerdos DoD y DoR
+
+- ### DoR (Definition of Ready):
+  - Diseñar el wireframe.
+  - Refinar y asignar la tarea.
+- ### DoD (Definition of Done):
+  - Completar la implementación de la tarea.
+  - Realizar pruebas unitarias y de integración.
+  - Revisar el código (code review).
+  - Mergear desde ramas feat/, fix/, refactor siguiendo conventional commits.
+  - Una vez mergeado a main, se cierra la tarea.
+
+
 ## Información del proyecto
 Tecnologías usadas:
  - Typescript

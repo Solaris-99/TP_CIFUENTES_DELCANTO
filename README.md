@@ -1,5 +1,5 @@
 # Pasos backoffice
-![logo pasos](/src/assets/images/logo-removebg-preview.png)
+![logo pasos](/src/assets/images/pasos_full.png)  
 Pasos Backoffice es un proyecto académico para la escuela DaVinci de una aplicación web para el manejo de registros de pacientes y terapeutas. 
 
 ## Información del grupo

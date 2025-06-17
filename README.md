@@ -1,54 +1,44 @@
-# React + TypeScript + Vite
+# Pasos backoffice
+![logo pasos](/src/assets/images/logo-removebg-preview.png)
+Pasos Backoffice es un proyecto académico para la escuela DaVinci de una aplicación web para el manejo de registros de pacientes y terapeutas. 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Información del grupo
+- Materia: Plataformas de desarrollo
+- Comisión: ACN4AV
+- Integrantes:
+  - Emanuel Mauricio Cifuentes
+  - Cristian Daniel Del Canto
 
-Currently, two official plugins are available:
+## Información del proyecto
+Tecnologías usadas:
+ - Typescript
+ - Vite
+ - React
+ - MUI
+ - Axios
+ - Zod
+ - BiomeJS
+ - Husky
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Funcionalidad del proyecto
+Las principales funciones incluyen:
+  - **Login**: Todas las pantallas están protegidas por un login.
+  - **Pacientes**: Permite registrar y manejar información pertinente a los pacientes, como sus programas y terapeutas asignados
+  - **Terapuetas**: Permite crear y asignar terapeutas a un paciente (funcionalidad del coordinador).
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Compilación y ejecución
+Se requiere al menos node 20.
+Para clonar el repositorio e instalar las dependencias, introducir en el terminal:
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+git clone https://github.com/Solaris-99/TP_CIFUENTES_DELCANTO.git
+cd TP_CIFUENTES_DELCANTO
+npm i
+```
+Para ejecutar en modo desarrollo, ingresar en el terminal:
+```
+npm run dev
+```
+Para buildear, ingresar en el terminal:
+```
+npm run build
 ```

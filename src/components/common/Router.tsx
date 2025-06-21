@@ -2,7 +2,6 @@ import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import NotFound from '@/pages/NotFound';
 import Patient from '@/pages/Patient';
-import Program from '@/pages/Program';
 import Therapist from '@/pages/TherapistView';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import Layout from './Layout';
@@ -17,8 +16,7 @@ const Router = () => {
 				<Route element={<ProtectedRoute />}>
 					<Route path='/' element={<Layout />}>
 						<Route index element={<Home />} />
-						<Route path='/:patientId' element={<Patient />} />
-						<Route path='/:patientId/:programId' element={<Program />} />
+						<Route path='/patient/:patientId' element={<Patient />} />
 						<Route path='/therapist/:therapistId' element={<Therapist />} />
 					</Route>
 				</Route>

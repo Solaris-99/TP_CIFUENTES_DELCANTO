@@ -1,97 +1,80 @@
-import AccordionList from '@/components/common/AccordionList';
-import type { Program } from '@/components/common/types/program';
-import { Button, ListItem, ListItemButton, Typography } from '@mui/material';
-import { useParams } from 'react-router';
+import Background from '@/features/patient/components/Background';
+import PatientInfo from '@/features/patient/components/PatientInfo';
+import ProgramAssignment from '@/features/patient/components/ProgramAssignment';
+import ProgramHeader from '@/features/patient/components/ProgramHeader';
+import ProgramProgress from '@/features/patient/components/ProgramSteps';
+import StepTracing from '@/features/patient/components/StepTracing';
+import TherapistAssignment from '@/features/patient/components/TherapistAssignment';
+import { Grid, Paper } from '@mui/material';
+
+/* type ActionType = 'Pos' | 'Neg' | 'N/R';
+
+interface Note {
+  id: number;
+  stepId: number;
+  content: ActionType;
+  date: Date;
+  therapist: string;
+}
+
+interface Step {
+  id: number;
+  title: string;
+  status: 'Activo' | 'Suspendido' | 'Completo';
+  notes: Note[];
+}
+
+interface Program {
+  id: number;
+  dateCreation?: Date;
+  lastUpdated?: Date;
+  name: string;
+  antecedent?: string;
+  status?: string;
+  steps: Step[];
+} */
 
 const Patient = () => {
-	//considerar cambiar los valores de estado
-	const params = useParams(); //patientId
-	//mock
-	const patientName = 'pepito';
-	const programs: Program[] = [
-		{
-			id: 1,
-			name: 'Vocales',
-			dateCreation: new Date(),
-			status: 'wip',
-			lastUpdated: new Date(),
-			antecedent: 'asdasd',
-		},
-		{
-			id: 2,
-			name: 'bcf',
-			dateCreation: new Date(),
-			status: 'finished',
-			lastUpdated: new Date(),
-			antecedent: 'asdasd',
-		},
-		{
-			id: 3,
-			name: 'ghj',
-			dateCreation: new Date(),
-			status: 'suspended',
-			lastUpdated: new Date(),
-			antecedent: 'asdasd',
-		},
-	];
-
-	const finishedPrograms = programs.filter((e) => e.status === 'finished');
-	const wipPrograms = programs.filter((e) => e.status === 'wip');
-	const suspendedPrograms = programs.filter((e) => e.status === 'suspended');
-
 	return (
 		<>
-			<Typography variant='h2' marginX={'auto'} width={'fit-content'}>
-				Programación de {patientName}
-			</Typography>
-			<AccordionList
-				items={wipPrograms.map((e) => (
-					<ListItem key={e.id}>
-						<ListItemButton href={`/${params.patientId}/${e.id}`}>
-							{e.name}
-						</ListItemButton>
-						<Button
-							onClick={() => {
-								console.log(`reanudado: ${e.id}`);
-							}}
-						>
-							Suspender
-						</Button>
-					</ListItem>
-				))}
-				title='En enseñanza'
-				defaultExpanded
-				addButton
-				buttonFunction={() => {
-					'form de programa';
-				}}
-			/>
-			<AccordionList
-				items={suspendedPrograms.map((e) => (
-					<ListItem key={e.id}>
-						<ListItemButton href={`/${params.patientId}/${e.id}`}>
-							{e.name}
-						</ListItemButton>
-						<Button
-							onClick={() => {
-								console.log(`reanudado: ${e.id}`);
-							}}
-						>
-							Reanudar
-						</Button>
-					</ListItem>
-				))}
-				title='Suspendidos'
-			/>
-			<AccordionList
-				items={finishedPrograms.map((e) => (
-					<ListItemButton href={`/${params.patientId}/${e.id}`} key={e.id}>
-						{e.name}
-					</ListItemButton>
-				))}
-				title='Completos'
-			/>
+			<Grid container spacing={2}>
+				<Grid size={6}>
+					<PatientInfo />
+				</Grid>
+				<Grid size={6}>
+					<TherapistAssignment />
+				</Grid>
+			</Grid>
+			<Grid container>
+				<Grid size={12}>
+					<Background />
+				</Grid>
+			</Grid>
+			<Grid container columns={12}>
+				<Grid size={4}>
+					<ProgramAssignment />
+				</Grid>
+				<Grid size={8}>
+					<Grid
+						container
+						component={Paper}
+						variant='outlined'
+						sx={{ padding: '.5rem' }}
+					>
+						<Grid size={12}>
+							<ProgramHeader />
+						</Grid>
+						<Grid size={7}>
+							<ProgramProgress />
+						</Grid>
+						<Grid size={5}>
+							<StepTracing />
+						</Grid>
+					</Grid>
+				</Grid>
+			</Grid>
 		</>
 	);
 };
+
 export default Patient;

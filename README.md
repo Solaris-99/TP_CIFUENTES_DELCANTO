@@ -55,3 +55,97 @@ Para buildear, ingresar en el terminal:
 ```
 npm run build
 ```
+
+### Arquitectura del proyecto
+#### Principios de Clean Code Aplicados:
+
+1. **Separación de Preocupaciones (Separation of Concerns):** Cada módulo o archivo tiene una única responsabilidad.
+2. **Alta Cohesión, Bajo Acoplamiento:** Los elementos relacionados están agrupados, y la dependencia entre módulos es mínima.
+3. **Modularidad:** Código dividido en módulos pequeños y manejables.
+4. **Principio de Responsabilidad Única (SRP):** Cada archivo tiene una única razón para cambiar.
+5. **Reusabilidad:** Componentes y lógica que pueden ser utilizados en diferentes partes de la aplicación.
+6. **Legibilidad:** Estructura que facilita encontrar y entender el código.
+
+#### Ejemplo de estructura
+
+~~~
+src/ 
+├── api/ # Lógica de interacciones con APIs externas
+│ └── patients.ts 
+│ └── ... 
+├── assets/ # Archivos estáticos 
+│ ├── images/ 
+│ ├── icons/ 
+│ └── fonts/ 
+├── components/ # Componentes UI reutilizables y atómicos (dumb components) 
+│ ├── Button.tsx 
+│ ├── Input.tsx 
+│ └── ... 
+├── constants/ # Valores inmutables y constantes globales 
+│ ├── appConstants.ts 
+│ └── errorMessages.ts 
+├── hooks/ # Custom Hooks
+│ ├── useAuth.ts 
+│ └── ... 
+├── layouts/ # Componentes de layout de alto nivel (Header, Sidebar, Footer) 
+│ ├── AppLayout.tsx 
+│ ├── AuthLayout.tsx 
+│ └── ... 
+├── lib/ # Utilidades de terceros o configuraciones de librerías 
+│ ├── axios.ts # Instancia de Axios configurada 
+│ ├── zod.ts # Configuración global de Zod
+│ └── ... 
+├── models/ # Definiciones de interfaces/tipos globales (si son transversales a varias features) 
+│ ├── User.ts
+│ ├── Product.ts
+│ └── ... 
+├── pages/ # Rutas principales de la aplicación (container components) 
+│ ├── Auth/ 
+│ │ ├── LoginPage.tsx 
+│ │ └── RegisterPage.tsx 
+│ ├── Dashboard/ 
+│ │ ├── DashboardPage.tsx 
+│ │ └── DashboardWidgets.tsx 
+│ └── ... 
+├── features/ # <-- Componentes separados por feature
+│ ├── Auth/ 
+│ │ ├── components/ 
+│ │ │ ├── LoginForm/ 
+│ │ │ │ └── LoginForm.tsx 
+│ │ │ └── RegisterForm/ 
+│ │ │ └── ... 
+│ │ ├── hooks/ 
+│ │ │ └── useLogin.ts 
+│ │ ├── services/ 
+│ │ │ └── authService.ts 
+│ │ ├── schemas/ # <-- Zod Schemas para formularios de esta feature 
+│ │ │ ├── loginSchema.ts 
+│ │ │ └── registerSchema.ts 
+│ │ ├── types/ # Tipos específicos de la feature (si no son globales) 
+│ │ │ └── authTypes.ts 
+│ │ └── index.ts (exporta componentes y hooks principales de la feature) 
+│ ├── Products/ 
+│ │ ├── components/  
+│ │ │ ├── ProductForm.tsx # Componente de formulario React Hook Form 
+│ │ │ └── ProductCard.tsx
+│ │ │ └── ... 
+│ │ ├── hooks/ 
+│ │ │ └── useProductDetails.ts 
+│ │ ├── services/ 
+│ │ │ └── productService.ts 
+│ │ ├── schemas/ # <-- Zod Schemas para formularios de esta feature 
+│ │ │ ├── productSchema.ts 
+│ │ │ └── productFilterSchema.ts 
+│ │ ├── types/ 
+│ │ │ └── productTypes.ts 
+│ │ └── index.ts 
+│ └── UserProfile/ 
+│ └── ... 
+├── utils/ # Funciones de utilidad pequeñas y genéricas (helpers) 
+│ ├── formatters.ts 
+│ ├── validators.ts (para validaciones genéricas, no de esquemas) 
+│ └── ... 
+├── main.tsx # Punto de entrada de la aplicación (ReactDOM.render) 
+├── vite-env.d.ts # Archivos de declaración de tipos de Vite 
+└── setupTests.ts # Configuración de pruebas
+~~~

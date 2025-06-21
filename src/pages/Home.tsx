@@ -1,7 +1,7 @@
 import AccordionList from '@/components/common/AccordionList';
 import type { Patient } from '@/components/common/types/patient';
 import type { Therapist } from '@/components/common/types/therapist';
-import { ListItemButton, Typography } from '@mui/material';
+import { Button, ListItemButton, Typography } from '@mui/material';
 
 const Home = () => {
 	// Mock data for patients in services
@@ -47,25 +47,31 @@ const Home = () => {
 						{e.name}
 					</ListItemButton>
 				))}
-				text='Listado de todos los pacientes'
-				title='Pacientes'
+				text='Pacientes asignados'
+				title='Mis pacientes'
 				defaultExpanded
+			/>
+			{/**Solo para los coordinadores */}
+			<AccordionList
+				items={mockPatients.map((e) => (
+					<ListItemButton key={`p-${e.id}`} href={`/${e.id}`}>
+						{e.name}
+					</ListItemButton>
+				))}
+				text='Listado de todos los pacientes'
+				title='Todos los pacientes'
 				addButton
 				buttonFunction={() => {
 					console.log('form de paciente');
 				}}
 			/>
-			<AccordionList
-				items={mockTher.map((e) => (
-					<ListItemButton key={`t-${e.id}`}>{e.name}</ListItemButton>
-				))}
-				text='Listado de todos los terapeutas'
-				title='Terapeutas'
-				addButton
-				buttonFunction={() => {
-					console.log('form de terapueta');
-				}}
-			/>
+			<Button
+				style={{ margin: '0 auto', display: 'block', width: 'fit-content' }}
+				variant='contained'
+				href='/therapist/0'
+			>
+				Administrar terapeutas
+			</Button>
 		</>
 	);
 };

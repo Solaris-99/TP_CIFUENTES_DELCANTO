@@ -1,17 +1,14 @@
 import { authEndpoints } from '@/apis/authApi';
 import type { ApiErrorResponse } from '@/apis/axios';
 import { isAxiosError } from 'axios';
-import type { LoginCredentials, User } from '../types/authTypes';
+import type { LoginCredentials, LoginResponse, User } from '../types/authTypes';
 
 export const loginUser = async (
 	credentials: LoginCredentials
-): Promise<User> => {
+): Promise<LoginResponse> => {
 	try {
 		const response = await authEndpoints.login(credentials);
 		const { token, user: apiUser } = response.data;
-
-		// TODO: Save all in store
-		localStorage.setItem('auth', token);
 
 		const user: User = {
 			id: apiUser.id,
@@ -20,7 +17,7 @@ export const loginUser = async (
 			role: apiUser.role,
 		};
 
-		return user;
+		return { token, user };
 	} catch (error: unknown) {
 		let message = 'Error al iniciar sesión.';
 		if (isAxiosError<ApiErrorResponse>(error)) {
@@ -31,12 +28,9 @@ export const loginUser = async (
 				message = error.response?.data?.message || message;
 			}
 		}
+		console.log(error);
 		throw new Error(message);
 	}
-};
-
-export const logoutUser = () => {
-	localStorage.removeItem('auth');
 };
 
 /* export const registerUser = async (

@@ -1,5 +1,5 @@
-import logoFull from '@/assets/images/logo-full.svg';
-import { Box, Typography } from '@mui/material';
+import logoFull from '@/assets/images/pasos_full.png';
+import { Box, Paper, Typography } from '@mui/material';
 import LoginForm from 'features/auth/components/LoginForm';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router';
@@ -8,7 +8,7 @@ const Login: FC = () => {
 	const navigate = useNavigate();
 
 	return (
-		<Box
+		<Paper
 			sx={{
 				maxWidth: 400,
 				mx: 'auto',
@@ -24,7 +24,7 @@ const Login: FC = () => {
 					mb: 3,
 				}}
 			>
-				<img src={logoFull} alt='Pasos logo' />
+				<img src={logoFull} alt='Pasos logo' width={300} />
 			</Box>
 			<Typography variant='h4' component='h1' textAlign='center' gutterBottom>
 				Iniciar Sesión
@@ -37,7 +37,7 @@ const Login: FC = () => {
 					¿Olvidaste tu contraseña?
 				</a>
 			</Typography>
-		</Box>
+		</Paper>
 	);
 };
 

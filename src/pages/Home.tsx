@@ -2,8 +2,12 @@ import AccordionList from '@/components/common/AccordionList';
 import type { Patient } from '@/components/common/types/patient';
 import type { Therapist } from '@/components/common/types/therapist';
 import { Button, ListItemButton, Typography } from '@mui/material';
+import { AuthContext } from 'context/AuthContext';
+import { useContext } from 'react';
 
 const Home = () => {
+	const authContext = useContext(AuthContext);
+	const user = authContext?.user;
 	// Mock data for patients in services
 	const patient1: Patient = {
 		id: 1,
@@ -38,7 +42,7 @@ const Home = () => {
 	return (
 		<>
 			<Typography variant='h2' marginX={'auto'} width={'fit-content'}>
-				Bienvenido, terapeuta
+				Bienvenido{user ? `, ${user.name}` : null}
 			</Typography>{' '}
 			{/** poner el nombre*/}
 			<AccordionList

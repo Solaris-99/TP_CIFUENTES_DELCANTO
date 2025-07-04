@@ -2,6 +2,7 @@ import Router from '@/components/common/Router.tsx';
 import { theme } from '@/configs/theme';
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
+import { AuthProvider } from 'context/AuthContext';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -13,9 +14,11 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
 	<StrictMode>
-		<ThemeProvider theme={theme}>
-			<CssBaseline />
-			<Router />
-		</ThemeProvider>
+		<AuthProvider>
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				<Router />
+			</ThemeProvider>
+		</AuthProvider>
 	</StrictMode>
 );

@@ -1,6 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'; // Necesitas instalar esta dependencia
 import { Alert, Button, TextField } from '@mui/material';
+import { AuthContext } from 'context/AuthContext';
 import { type FC, useState } from 'react';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { type LoginFormValues, loginSchema } from '../schemas/loginSchema'; // Importa el esquema Zod
 import { loginUser } from '../services/authService';
@@ -11,6 +13,8 @@ interface LoginFormProps {
 }
 
 const LoginForm: FC<LoginFormProps> = ({ onSubmitSuccess }) => {
+	const authContext = useContext(AuthContext);
+
 	const [error, setError] = useState<string | null>(null);
 
 	const {
@@ -26,6 +30,8 @@ const LoginForm: FC<LoginFormProps> = ({ onSubmitSuccess }) => {
 	const onSubmit = async (data: LoginFormValues) => {
 		try {
 			const response = await loginUser(data);
+			authContext?.setToken(response.token);
+			authContext?.setUser(response.user);
 			console.log('Usuario logueado:', response);
 			reset();
 			onSubmitSuccess();

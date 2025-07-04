@@ -29,7 +29,7 @@ export const authEndpoints = {
 				user: {
 					id: 1,
 					email: credentials.email,
-					name: 'Mocked User',
+					name: 'Pepito perez',
 					role: 'coordinator' as UserRole,
 				},
 			},

@@ -16,6 +16,8 @@ export const loginUser = async (
 			name: apiUser.name,
 			role: apiUser.role,
 		};
+		localStorage.setItem('token', token);
+		localStorage.setItem('role', user.role);
 
 		return { token, user };
 	} catch (error: unknown) {

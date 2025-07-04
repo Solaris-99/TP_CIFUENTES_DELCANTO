@@ -44,10 +44,9 @@ const Home = () => {
 			<Typography variant='h2' marginX={'auto'} width={'fit-content'}>
 				Bienvenido{user ? `, ${user.name}` : null}
 			</Typography>{' '}
-			{/** poner el nombre*/}
 			<AccordionList
 				items={mockPatients.map((e) => (
-					<ListItemButton key={`p-${e.id}`} href={`/${e.id}`}>
+					<ListItemButton key={`p-${e.id}`} href={`/patient/${e.id}`}>
 						{e.name}
 					</ListItemButton>
 				))}
@@ -58,7 +57,7 @@ const Home = () => {
 			{/**Solo para los coordinadores */}
 			<AccordionList
 				items={mockPatients.map((e) => (
-					<ListItemButton key={`p-${e.id}`} href={`/${e.id}`}>
+					<ListItemButton key={`p-${e.id}`} href={`/patient/${e.id}`}>
 						{e.name}
 					</ListItemButton>
 				))}
@@ -69,13 +68,15 @@ const Home = () => {
 					console.log('form de paciente');
 				}}
 			/>
-			<Button
-				style={{ margin: '0 auto', display: 'block', width: 'fit-content' }}
-				variant='contained'
-				href='/therapist/0'
-			>
-				Administrar terapeutas
-			</Button>
+			{localStorage.getItem('role') === 'coordinator' ? (
+				<Button
+					style={{ margin: '0 auto', display: 'block', width: 'fit-content' }}
+					variant='contained'
+					href='/therapist'
+				>
+					Administrar terapeutas
+				</Button>
+			) : null}
 		</>
 	);
 };

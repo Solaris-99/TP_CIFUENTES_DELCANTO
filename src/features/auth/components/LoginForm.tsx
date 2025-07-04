@@ -30,13 +30,11 @@ const LoginForm: FC<LoginFormProps> = ({ onSubmitSuccess }) => {
 	const onSubmit = async (data: LoginFormValues) => {
 		try {
 			const response = await loginUser(data);
-			authContext?.setToken(response.token);
 			authContext?.setUser(response.user);
 			console.log('Usuario logueado:', response);
 			reset();
 			onSubmitSuccess();
 		} catch (error) {
-			// TODO: Setup errors in constants
 			console.error('Error al loguearse:', error);
 			setError('Hubo un error al loguearse. Por favor, intenta de nuevo.');
 		}

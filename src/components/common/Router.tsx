@@ -17,7 +17,7 @@ const Router = () => {
 					<Route path='/' element={<Layout />}>
 						<Route index element={<Home />} />
 						<Route path='/patient/:patientId' element={<Patient />} />
-						<Route path='/therapist/:therapistId' element={<Therapist />} />
+						<Route path='/therapist' element={<Therapist />} />
 					</Route>
 				</Route>
 			</Routes>

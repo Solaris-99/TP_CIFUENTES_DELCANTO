@@ -2,10 +2,11 @@ import logo from '@/assets/images/logo-removebg-preview.png';
 import { Box, Button, Paper } from '@mui/material';
 import { AuthContext } from 'context/AuthContext';
 import { useContext } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const Nav = () => {
 	const authContext = useContext(AuthContext);
+	const navigate = useNavigate();
 
 	return (
 		<Paper elevation={2} style={{ width: '100vw' }}>
@@ -27,11 +28,15 @@ const Nav = () => {
 				</Link>
 				<Box display={'flex'} height={'fit-content'} marginY={'auto'}>
 					<Button href='/'>Pacientes</Button>
-					<Button href='/'>Terapeutas</Button>
+
+					{localStorage.getItem('role') ? (
+						<Button href='/therapist'>Terapeutas</Button>
+					) : null}
 					<Button
 						onClick={() => {
-							authContext?.setToken(null);
+							localStorage.removeItem('token');
 							authContext?.setUser(null);
+							navigate('/login');
 						}}
 					>
 						Salir

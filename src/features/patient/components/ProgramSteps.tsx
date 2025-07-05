@@ -1,4 +1,5 @@
 import SearchField from '@/components/SearchField';
+import type { Program, Step } from '@/components/common/types/program';
 import { MoreVert } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
 import {
@@ -7,32 +8,94 @@ import {
 	IconButton,
 	List,
 	ListItem,
+	ListItemButton,
 	ListItemText,
 	Menu,
 	MenuItem,
 	Tooltip,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
 
-interface Step {
-	id: number;
-	title: string;
-	status: 'Activo' | 'Suspendido' | 'Completo';
-}
-
-const mockSteps: Step[] = Array.from({ length: 50 }, (_, i) => ({
-	id: i + 1,
-	title: `Paso ${i + 1}`,
-	status: 'Activo',
-}));
+const programsDefault: Program[] = [
+	{
+		id: 1,
+		dateCreation: new Date('2023-05-15'),
+		lastUpdated: new Date('2024-03-22'),
+		name: 'Renacer Infantil',
+		antecedent: 'Programa para niños con traumas por separación familiar.',
+		status: 'Activo',
+		steps: Array.from({ length: Math.ceil(Math.random() * 15) }, (_, i) => ({
+			id: i + 1,
+			title: `Paso ${i + 1}`,
+			status: 'Activo',
+			responses: Array.from(
+				{ length: Math.ceil(Math.random() * 5) },
+				(_, j) => ({
+					id: j + 1,
+					title: `Respuesta ${j + 1}`,
+					status: Math.random() > 0.5 ? 'Activo' : 'Completo',
+				})
+			),
+		})),
+	},
+	{
+		id: 2,
+		dateCreation: new Date('2022-11-03'),
+		name: 'Juega y Sana',
+		antecedent: 'Terapia lúdica para niños con trastornos emocionales leves.',
+		lastUpdated: new Date('2023-01-18'),
+		status: 'Completo',
+		steps: Array.from({ length: Math.ceil(Math.random() * 15) }, (_, i) => ({
+			id: i + 1,
+			title: `Paso ${i + 1}`,
+			status: 'Activo',
+		})),
+	},
+	{
+		id: 3,
+		name: 'Creciendo Fuertes',
+		dateCreation: new Date('2021-09-10'),
+		lastUpdated: new Date('2023-01-18'),
+		antecedent:
+			'Prevención y tratamiento de ansiedad en menores escolarizados.',
+		status: 'Suspendido',
+		steps: Array.from({ length: Math.ceil(Math.random() * 15) }, (_, i) => ({
+			id: i + 1,
+			title: `Paso ${i + 1}`,
+			status: 'Activo',
+		})),
+	},
+];
 
 export default function ProgramSteps() {
-	const [selectedStepId, setSelectedStepId] = useState<number | null>(null);
-	const [steps, setSteps] = useState<Step[]>(mockSteps);
-	const [filteredSteps, setFilteredSteps] = useState<Step[]>(mockSteps);
+	const [steps, setSteps] = useState<Step[]>([]);
+	const [filteredSteps, setFilteredSteps] = useState<Step[]>([]);
 
 	const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 	const [menuStepId, setMenuStepId] = useState<number | null>(null);
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	useEffect(() => {
+		const programId = searchParams.get('programId');
+		const unitId = searchParams.get('unitId');
+
+		if (unitId) {
+			// get unit by id in service
+		}
+
+		if (programId) {
+			const program = programsDefault.find(
+				(p) => p.id.toString() === programId
+			);
+			if (program?.steps) {
+				setSteps(program.steps);
+			} else {
+				setSteps([]);
+				setFilteredSteps([]);
+			}
+		}
+	}, [searchParams]);
 
 	const handleMenuOpen = (
 		event: React.MouseEvent<HTMLElement>,
@@ -58,6 +121,15 @@ export default function ProgramSteps() {
 		handleMenuClose();
 	};
 
+	const handleStepSelect = (step: Step) => {
+		if (step) {
+			setSearchParams((searchParams) => {
+				searchParams.set('unitId', step.id.toString());
+				return searchParams;
+			});
+		}
+	};
+
 	return (
 		<>
 			<Box paddingRight='.5rem'>
@@ -80,14 +152,11 @@ export default function ProgramSteps() {
 					</Tooltip>
 				</Box>
 				<List dense={true} sx={{ maxHeight: '25rem', overflowY: 'auto' }}>
-					{filteredSteps.map((step) => (
+					{filteredSteps.map((step, idx) => (
 						<ListItem
-							disableGutters
 							key={step.id}
-							onClick={() => setSelectedStepId(step.id)}
+							disableGutters
 							sx={{
-								backgroundColor:
-									step.id === selectedStepId ? 'action.selected' : 'inherit',
 								borderRadius: 1,
 								cursor: 'pointer',
 								'& .MuiListItemSecondaryAction-root': {
@@ -114,13 +183,20 @@ export default function ProgramSteps() {
 								</>
 							}
 						>
-							<ListItemText primary={step.title} />
+							<ListItemButton
+								selected={step.id === Number(searchParams.get('unitId'))}
+								onClick={() => handleStepSelect(step)}
+								sx={{
+									paddingInline: '.5rem',
+								}}
+							>
+								<ListItemText primary={step.title} />
+							</ListItemButton>
 						</ListItem>
 					))}
 				</List>
 			</Box>
 
-			{/* Status Menu */}
 			<Menu
 				anchorEl={menuAnchorEl}
 				open={Boolean(menuAnchorEl)}

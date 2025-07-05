@@ -7,6 +7,7 @@ import {
 	IconButton,
 	List,
 	ListItem,
+	ListItemButton,
 	ListItemText,
 	Paper,
 	Tab,
@@ -15,6 +16,7 @@ import {
 	Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
 
 const programsDefault: Program[] = [
 	{
@@ -24,6 +26,7 @@ const programsDefault: Program[] = [
 		name: 'Renacer Infantil',
 		antecedent: 'Programa para niños con traumas por separación familiar.',
 		status: 'Activo',
+		steps: [],
 	},
 	{
 		id: 2,
@@ -32,6 +35,7 @@ const programsDefault: Program[] = [
 		antecedent: 'Terapia lúdica para niños con trastornos emocionales leves.',
 		lastUpdated: new Date('2023-01-18'),
 		status: 'Completo',
+		steps: [],
 	},
 	{
 		id: 3,
@@ -41,6 +45,7 @@ const programsDefault: Program[] = [
 		antecedent:
 			'Prevención y tratamiento de ansiedad en menores escolarizados.',
 		status: 'Suspendido',
+		steps: [],
 	},
 ];
 
@@ -48,19 +53,31 @@ const ProgramAssignment = () => {
 	const [tabIndex, setTabIndex] = useState(0);
 	const [programs, setPrograms] = useState<Program[]>([]);
 	const [filteredPrograms, setFilteredPrograms] = useState<Program[]>([]);
+	const [selectedItem, setSelectedItem] = useState<number | null>(null);
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	useEffect(() => {
 		setPrograms(programsDefault);
 		setFilteredPrograms(programsDefault);
-	}, []);
+		const programId = searchParams.get('programId');
+		if (programId) {
+			const program = programsDefault.find(
+				(p) => p.id.toString() === programId
+			);
+			if (program) {
+				const itemIdx = programsDefault.indexOf(program);
+				setSelectedItem(itemIdx);
+				//setTabIndex(program.status === 'Activo' ? 0 : program.status === 'Completo' ? 1 : program.status === 'Suspendido' ? 2 : 0);
+			}
+		}
+	}, [searchParams]);
 
-	const handleAsignProgram = (id) => {
-		console.log(`Asignar programa con id: ${id}`);
-		// Implement assign logic here
+	const handleSelectProgram = (id: number, itemIdx: number) => {
+		setSelectedItem(itemIdx);
+		setSearchParams({ programId: id.toString() });
 	};
 	const handleRemoveProgram = (id) => {
 		console.log(`Eliminar programa con id: ${id}`);
-		// Implement remove logic here
 	};
 
 	return (
@@ -107,14 +124,11 @@ const ProgramAssignment = () => {
 				</Box>
 
 				<List dense={true} sx={{ maxHeight: '25rem', overflowY: 'auto' }}>
-					{filteredPrograms.map((program) => (
+					{filteredPrograms.map((program, idx) => (
 						<ListItem
-							dense={true}
-							key={program.id}
-							sx={{
-								paddingInline: '.5rem',
-							}}
 							disablePadding
+							key={program.id}
+							dense={true}
 							secondaryAction={
 								<Tooltip title='Eliminar' arrow>
 									<IconButton
@@ -127,13 +141,21 @@ const ProgramAssignment = () => {
 								</Tooltip>
 							}
 						>
-							<ListItemText
-								slotProps={{
-									primary: { fontWeight: 'bold', paddingRight: '2rem' },
+							<ListItemButton
+								selected={idx === selectedItem}
+								onClick={() => handleSelectProgram(program.id, idx)}
+								sx={{
+									paddingInline: '.5rem',
 								}}
-								primary={program.name}
-								secondary='3 sesiones'
-							/>
+							>
+								<ListItemText
+									slotProps={{
+										primary: { fontWeight: 'bold', paddingRight: '2rem' },
+									}}
+									primary={program.name}
+									secondary='3 sesiones'
+								/>
+							</ListItemButton>
 						</ListItem>
 					))}
 				</List>

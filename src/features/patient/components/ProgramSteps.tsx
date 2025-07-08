@@ -1,4 +1,5 @@
 import SearchField from '@/components/SearchField';
+import DialogForm from '@/components/common/DialogForm';
 import type { Program, Step } from '@/components/common/types/program';
 import { MoreVert } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
@@ -29,6 +30,8 @@ const programsDefault: Program[] = [
 			id: i + 1,
 			title: `Paso ${i + 1}`,
 			status: 'Activo',
+			created: new Date(),
+			updated: new Date(),
 			responses: Array.from(
 				{ length: Math.ceil(Math.random() * 5) },
 				(_, j) => ({
@@ -50,6 +53,8 @@ const programsDefault: Program[] = [
 			id: i + 1,
 			title: `Paso ${i + 1}`,
 			status: 'Activo',
+			created: new Date(),
+			updated: new Date(),
 		})),
 	},
 	{
@@ -64,6 +69,8 @@ const programsDefault: Program[] = [
 			id: i + 1,
 			title: `Paso ${i + 1}`,
 			status: 'Activo',
+			created: new Date(),
+			updated: new Date(),
 		})),
 	},
 ];
@@ -71,6 +78,7 @@ const programsDefault: Program[] = [
 export default function ProgramSteps() {
 	const [steps, setSteps] = useState<Step[]>([]);
 	const [filteredSteps, setFilteredSteps] = useState<Step[]>([]);
+	const [addStepDialogOpen, setAddStepDialogOpen] = useState(false);
 
 	const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 	const [menuStepId, setMenuStepId] = useState<number | null>(null);
@@ -144,12 +152,32 @@ export default function ProgramSteps() {
 						<IconButton
 							aria-label='add item'
 							size='small'
-							onClick={() => {}}
+							onClick={() => {
+								setAddStepDialogOpen(true);
+							}}
 							sx={{ marginTop: '1rem' }}
 						>
 							<AddIcon />
 						</IconButton>
 					</Tooltip>
+					<DialogForm
+						onSubmitSuccess={(data) => {
+							console.log(data);
+							const newStep: Step = {
+								id: Math.ceil(Math.random() * 150 + 10),
+								title: data,
+								status: 'Activo',
+								created: new Date(),
+								updated: new Date(),
+							};
+							setSteps([...steps, newStep]);
+						}}
+						title='Añadir un paso'
+						fieldLabel='Nombre del paso'
+						open={addStepDialogOpen}
+						fieldName='add-step-name'
+						handleClose={() => setAddStepDialogOpen(false)}
+					/>
 				</Box>
 				<List dense={true} sx={{ maxHeight: '25rem', overflowY: 'auto' }}>
 					{filteredSteps.map((step, idx) => (

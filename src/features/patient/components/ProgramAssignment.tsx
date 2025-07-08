@@ -143,7 +143,7 @@ const ProgramAssignment = () => {
 							setPrograms([...programs, newProgram]);
 						}}
 						title='Añadir un programa'
-						fieldLabel='Añadir Programa'
+						fieldLabel='Nombre del Programa'
 						open={addProgramDialogOpen}
 						fieldName='add-program-name'
 						handleClose={() => setAddProgramDialogOpen(false)}

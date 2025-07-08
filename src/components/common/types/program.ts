@@ -2,6 +2,8 @@ export type Status = 'Activo' | 'Suspendido' | 'Completo';
 
 export interface Step {
 	id: number;
+	created: Date;
+	updated: Date;
 	title: string;
 	status: Status;
 }

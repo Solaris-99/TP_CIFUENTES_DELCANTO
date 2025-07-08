@@ -17,7 +17,7 @@ interface PatientFormProps {
 	open: boolean;
 	onClose?: (() => void) | undefined;
 	style?: React.CSSProperties;
-	onSubmit: React.FormEventHandler<HTMLFormElement> | undefined;
+	onSubmitSuccess: (id: string) => void;
 }
 
 const AddPatientForm: FC<PatientFormProps> = ({
@@ -25,7 +25,7 @@ const AddPatientForm: FC<PatientFormProps> = ({
 	open,
 	onClose,
 	style,
-	onSubmit,
+	onSubmitSuccess,
 }) => {
 	const [selectedPatientId, setSelectedPatientId] = useState(''); // modal
 
@@ -33,7 +33,13 @@ const AddPatientForm: FC<PatientFormProps> = ({
 		<Modal id='modal-patient' style={style} open={open} onClose={onClose}>
 			<Paper style={{ padding: '1rem' }}>
 				<Typography variant='h4'>Agrega un paciente</Typography>
-				<form onSubmit={onSubmit}>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						const select = e.currentTarget[0] as HTMLInputElement;
+						onSubmitSuccess(select.value);
+					}}
+				>
 					<FormControl style={{ marginTop: '1rem' }} fullWidth>
 						<InputLabel id='select-patient-label'>Paciente</InputLabel>
 						<Select

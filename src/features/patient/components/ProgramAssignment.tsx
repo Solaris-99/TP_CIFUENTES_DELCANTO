@@ -1,9 +1,12 @@
 import SearchField from '@/components/SearchField';
+import DialogForm from '@/components/common/DialogForm';
 import type { Program } from '@/components/common/types/program';
+import { MoreVert } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
 import CancelIcon from '@mui/icons-material/CancelOutlined';
 import {
 	Box,
+	Chip,
 	IconButton,
 	List,
 	ListItem,
@@ -52,6 +55,7 @@ const programsDefault: Program[] = [
 const ProgramAssignment = () => {
 	const [tabIndex, setTabIndex] = useState(0);
 	const [programs, setPrograms] = useState<Program[]>([]);
+	const [addProgramDialogOpen, setAddProgramDialogOpen] = useState(false);
 	const [filteredPrograms, setFilteredPrograms] = useState<Program[]>([]);
 	const [selectedItem, setSelectedItem] = useState<number | null>(null);
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -76,7 +80,8 @@ const ProgramAssignment = () => {
 		setSelectedItem(itemIdx);
 		setSearchParams({ programId: id.toString() });
 	};
-	const handleRemoveProgram = (id) => {
+	const handleRemoveProgram = (id: number) => {
+		setPrograms(programs.filter((p) => p.id !== id));
 		console.log(`Eliminar programa con id: ${id}`);
 	};
 
@@ -115,12 +120,34 @@ const ProgramAssignment = () => {
 						<IconButton
 							aria-label='add program'
 							size='small'
-							onClick={() => {}}
+							onClick={() => {
+								setAddProgramDialogOpen(true);
+							}}
 							sx={{ marginTop: '1rem' }}
 						>
 							<AddIcon />
 						</IconButton>
 					</Tooltip>
+					<DialogForm
+						onSubmitSuccess={(data) => {
+							console.log(data);
+							const newProgram: Program = {
+								id: Math.ceil(Math.random() * 150 + 10),
+								dateCreation: new Date(),
+								lastUpdated: new Date(),
+								name: data,
+								antecedent: '',
+								status: 'Activo',
+								steps: [],
+							};
+							setPrograms([...programs, newProgram]);
+						}}
+						title='Añadir un programa'
+						fieldLabel='Añadir Programa'
+						open={addProgramDialogOpen}
+						fieldName='add-program-name'
+						handleClose={() => setAddProgramDialogOpen(false)}
+					/>
 				</Box>
 
 				<List dense={true} sx={{ maxHeight: '25rem', overflowY: 'auto' }}>

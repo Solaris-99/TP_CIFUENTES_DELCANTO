@@ -11,6 +11,13 @@ import {
 	Paper,
 	Typography,
 } from '@mui/material';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableRow,
+} from '@mui/material';
 import { useState } from 'react';
 
 const modalStyle: React.CSSProperties = {
@@ -24,8 +31,6 @@ const TherapistView = () => {
 	const [modalPatientOpen, setModalPatientOpen] = useState(false);
 	const [modalTherapistOpen, setModalTherapistOpen] = useState(false);
 	const [selectedTherapist, setSelectedTherapist] = useState<Therapist>();
-	const [patients, setPatients] = useState<Patient[]>([]);
-
 	/**
 	 * when selecting therapist
 	 * then get patient of therapist
@@ -62,6 +67,9 @@ const TherapistView = () => {
 		title: 'psicologo',
 	};
 	const mockTher = [ther1, ther2];
+	const [patients, setPatients] = useState<Patient[]>([]);
+
+	const [therapists, setTherapists] = useState<Therapist[]>(mockTher);
 
 	return (
 		<>
@@ -70,11 +78,37 @@ const TherapistView = () => {
 			</Typography>
 			<Paper style={{ padding: '1rem', marginTop: '1rem' }}>
 				{selectedTherapist ? (
-					<Typography>
-						Email: {selectedTherapist.email}. Título: {selectedTherapist.title}.
-						Usuario creado el: {selectedTherapist.dateCreation.toUTCString()}.
-						Es coordinador: {selectedTherapist.isCoordinator ? 'Sí' : 'No'}
-					</Typography>
+					<>
+						<Typography variant='h5' style={{ margin: '5px 5px' }}>
+							Datos
+						</Typography>
+						<TableContainer>
+							<Table>
+								<TableBody>
+									<TableRow>
+										<TableCell>Email</TableCell>
+										<TableCell>{selectedTherapist.email}</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>Título</TableCell>
+										<TableCell>{selectedTherapist.title}</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>Creado</TableCell>
+										<TableCell>
+											{selectedTherapist.dateCreation.toUTCString()}
+										</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>Es coordinador</TableCell>
+										<TableCell>
+											{selectedTherapist.isCoordinator ? 'Sí' : 'No'}
+										</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
+						</TableContainer>
+					</>
 				) : (
 					<Typography>Selecciona un terapeuta.</Typography>
 				)}
@@ -82,7 +116,7 @@ const TherapistView = () => {
 
 			<Box style={{ display: 'flex', justifyContent: 'space-between' }}>
 				<AccordionList
-					items={mockTher.map((e) => (
+					items={therapists.map((e) => (
 						<ListItem key={`t-${e.id}`}>
 							<ListItemButton
 								onClick={() => {
@@ -108,10 +142,18 @@ const TherapistView = () => {
 							? `Pacientes de ${selectedTherapist.name}`
 							: 'Selecciona un terapeuta'
 					}
-					items={patients.map((e) => (
-						<ListItem key={`p-${e.id}`}>
-							<ListItemButton href={`/${e.id}`}>{e.name}</ListItemButton>
-							<Button>Remover</Button>
+					items={patients.map((e, i) => (
+						<ListItem key={`p-${e.id}`} id={`p-${e.id}`}>
+							<ListItemButton href={`/patient/${e.id}`}>
+								{e.name}
+							</ListItemButton>
+							<Button
+								onClick={() => {
+									setPatients(patients.filter((f) => f.id !== e.id));
+								}}
+							>
+								Remover
+							</Button>
 						</ListItem>
 					))}
 					defaultExpanded
@@ -120,8 +162,8 @@ const TherapistView = () => {
 				/>
 			</Box>
 			<AddPatientForm
-				onSubmit={(e) => {
-					e.preventDefault();
+				onSubmitSuccess={(id) => {
+					//setPatients([...patients, mockPatients[parseInt(id)]])
 					console.log('agregado');
 				}}
 				open={modalPatientOpen}
@@ -133,7 +175,11 @@ const TherapistView = () => {
 				open={modalTherapistOpen}
 				style={modalStyle}
 				onClose={() => setModalTherapistOpen(false)}
-				onSubmitSuccess={() => console.log('terapeuta creado')}
+				onSubmitSuccess={(ther) => {
+					setTherapists([...therapists, ther]);
+					setModalTherapistOpen(false);
+					console.log('Added therpist');
+				}}
 			/>
 		</>
 	);

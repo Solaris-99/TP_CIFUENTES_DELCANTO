@@ -1,3 +1,4 @@
+import type { Therapist } from '@/components/common/types/therapist';
 import {
 	type TherapistFormValues,
 	therapistSchema,
@@ -18,7 +19,7 @@ interface AddTherapistModalProps {
 	style?: React.CSSProperties;
 	open: boolean;
 	onClose?: (() => void) | undefined;
-	onSubmitSuccess: () => void;
+	onSubmitSuccess: (data: Therapist) => void;
 }
 
 const AddTherapistModal: FC<AddTherapistModalProps> = ({
@@ -43,8 +44,14 @@ const AddTherapistModal: FC<AddTherapistModalProps> = ({
 		try {
 			console.log('creando terapueta...');
 			//const response = await createTherapist(data);
+			const mockedResponse: Therapist = {
+				...data,
+				id: Math.floor(Math.random() * 1000),
+				isCoordinator: false,
+				dateCreation: new Date(),
+			};
+			onSubmitSuccess(mockedResponse);
 			reset();
-			onSubmitSuccess();
 		} catch (error) {
 			// TODO: Setup errors in constants
 			console.error('Error al crear terapueta:', error);

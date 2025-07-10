@@ -45,11 +45,6 @@ const Patient = () => {
 					<TherapistAssignment />
 				</Grid>
 			</Grid>
-			<Grid container>
-				<Grid size={12}>
-					<Background />
-				</Grid>
-			</Grid>
 			<Grid container columns={12}>
 				<Grid size={4}>
 					<ProgramAssignment />
@@ -63,6 +58,9 @@ const Patient = () => {
 					>
 						<Grid size={12}>
 							<ProgramHeader />
+						</Grid>
+						<Grid size={12}>
+							<Background background='Antecedente del programa' />
 						</Grid>
 						<Grid size={7}>
 							<ProgramProgress />

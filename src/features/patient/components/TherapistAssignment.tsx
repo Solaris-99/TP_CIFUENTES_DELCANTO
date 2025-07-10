@@ -17,14 +17,15 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-const therapists = [
-	{ id: 1, name: 'Dr. Smith', specialty: 'Cardiology' },
-	{ id: 2, name: 'Dr. Johnson', specialty: 'Neurology' },
-	{ id: 3, name: 'Dr. Lee', specialty: 'Pediatrics' },
+const therapistsData = [
+	{ id: 1, name: 'Dr. Smith', specialty: 'Lic. Psicología' },
+	{ id: 2, name: 'Dr. Johnson', specialty: 'Lic. Psicología' },
+	{ id: 3, name: 'Dr. Lee', specialty: 'Doc. Psicología' },
 ];
 
 const TherapistAssignment = () => {
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+	const [therapists, setTherapists] = useState(therapistsData);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -34,9 +35,14 @@ const TherapistAssignment = () => {
 		setAnchorEl(null);
 	};
 
-	const handleDelete = (id) => {
+	const handleDelete = (id: number) => {
 		console.log(`Delete therapist with id: ${id}`);
+		setTherapists(therapists.filter((e) => e.id !== id));
 		// Implement delete logic here
+	};
+
+	const handleAdd = (therapist) => {
+		setTherapists([...therapists, therapist]);
 	};
 
 	const open = Boolean(anchorEl);
@@ -77,7 +83,7 @@ const TherapistAssignment = () => {
 					}}
 				>
 					<List dense={true}>
-						{therapists.map((therapist, idx) => (
+						{therapistsData.map((therapist, idx) => (
 							<>
 								{idx !== 0 && (
 									<Divider key={therapist.id} variant='middle' component='li' />
@@ -85,7 +91,13 @@ const TherapistAssignment = () => {
 								<ListItem
 									key={therapist.id}
 									secondaryAction={
-										<IconButton edge='end' aria-label='add'>
+										<IconButton
+											onClick={() => {
+												handleAdd(therapist);
+											}}
+											edge='end'
+											aria-label='add'
+										>
 											<AddIcon />
 										</IconButton>
 									}

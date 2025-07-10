@@ -4,14 +4,13 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Box, IconButton, Paper, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
-const Background = () => {
-	const initialValue = 'Antecedentes del paciente';
-	const [value, setValue] = useState(initialValue);
+const Background = (props: { background: string }) => {
+	const [value, setValue] = useState(props.background);
 	const [isEditing, setIsEditing] = useState(false);
 
 	const handleEditClick = () => setIsEditing(true);
 	const handleCancelClick = () => {
-		setValue(initialValue);
+		setValue(props.background);
 		setIsEditing(false);
 	};
 	const handleSaveClick = () => setIsEditing(false);

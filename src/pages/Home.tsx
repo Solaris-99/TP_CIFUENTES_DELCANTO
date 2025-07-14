@@ -1,9 +1,10 @@
 import AccordionList from '@/components/common/AccordionList';
 import type { Patient } from '@/components/common/types/patient';
 import type { Therapist } from '@/components/common/types/therapist';
+import CreatePatientForm from '@/features/patient/components/CreatePatientForm';
 import { Button, ListItemButton, Typography } from '@mui/material';
 import { AuthContext } from 'context/AuthContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 const Home = () => {
 	const authContext = useContext(AuthContext);
@@ -35,7 +36,7 @@ const Home = () => {
 		email: 'pan@gmail.com',
 		title: 'psicologo',
 	};
-
+	const [createPatientModalOpen, setCreatePatientModalOpen] = useState(false);
 	const mockPatients = [patient1, patient2];
 	const mockTher = [ther1, ther2];
 
@@ -65,7 +66,7 @@ const Home = () => {
 				title='Todos los pacientes'
 				addButton
 				buttonFunction={() => {
-					console.log('form de paciente');
+					setCreatePatientModalOpen(true);
 				}}
 			/>
 			{localStorage.getItem('role') === 'coordinator' ? (
@@ -77,6 +78,13 @@ const Home = () => {
 					Administrar terapeutas
 				</Button>
 			) : null}
+			<CreatePatientForm
+				open={createPatientModalOpen}
+				handleClose={() => setCreatePatientModalOpen(false)}
+				onSubmitSuccess={() => {
+					console.log('paciente creado');
+				}}
+			/>
 		</>
 	);
 };

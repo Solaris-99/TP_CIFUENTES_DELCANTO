@@ -1,10 +1,10 @@
-import { zodResolver } from '@hookform/resolvers/zod'; // Necesitas instalar esta dependencia
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Button, TextField } from '@mui/material';
 import { AuthContext } from 'context/AuthContext';
 import { type FC, useState } from 'react';
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { type LoginFormValues, loginSchema } from '../schemas/loginSchema'; // Importa el esquema Zod
+import { type LoginFormValues, loginSchema } from '../schemas/loginSchema';
 import { loginUser } from '../services/authService';
 
 interface LoginFormProps {

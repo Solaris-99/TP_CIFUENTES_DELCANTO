@@ -1,8 +1,12 @@
 import AccordionList from '@/components/common/AccordionList';
 import type { Patient } from '@/components/common/types/patient';
-import type { Therapist } from '@/components/common/types/therapist';
 import AddPatientForm from '@/features/patient/components/AddPatientForm';
 import AddTherapistModal from '@/features/therapist/components/AddTherapistModal';
+import {
+	deleteTherapist,
+	getTherapists,
+} from '@/features/therapist/services/therapistsService';
+import type { Therapist } from '@/features/therapist/types/therapistsTypes';
 import {
 	Box,
 	Button,
@@ -18,7 +22,7 @@ import {
 	TableContainer,
 	TableRow,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const modalStyle: React.CSSProperties = {
 	width: 'fit-content',
@@ -31,13 +35,6 @@ const TherapistView = () => {
 	const [modalPatientOpen, setModalPatientOpen] = useState(false);
 	const [modalTherapistOpen, setModalTherapistOpen] = useState(false);
 	const [selectedTherapist, setSelectedTherapist] = useState<Therapist>();
-	/**
-	 * when selecting therapist
-	 * then get patient of therapist
-	 * then update view of patients.
-	 * create usestate for patients.
-	 *
-	 */
 
 	const patient1: Patient = {
 		id: 1,
@@ -50,26 +47,17 @@ const TherapistView = () => {
 		dateCreation: new Date(),
 	};
 	const mockPatients = [patient1, patient2];
-	const ther1: Therapist = {
-		id: 1,
-		name: 'juancito',
-		dateCreation: new Date(),
-		isCoordinator: false,
-		email: 'jj@gmail.com',
-		title: 'psicologo',
-	};
-	const ther2: Therapist = {
-		id: 2,
-		name: 'pancracio',
-		dateCreation: new Date(),
-		isCoordinator: false,
-		email: 'pan@gmail.com',
-		title: 'psicologo',
-	};
-	const mockTher = [ther1, ther2];
+
 	const [patients, setPatients] = useState<Patient[]>([]);
 
-	const [therapists, setTherapists] = useState<Therapist[]>(mockTher);
+	const [therapists, setTherapists] = useState<Therapist[]>([]);
+
+	useEffect(() => {
+		getTherapists().then((thers) => {
+			setTherapists(thers);
+			console.log(thers);
+		});
+	}, []);
 
 	return (
 		<>
@@ -96,13 +84,13 @@ const TherapistView = () => {
 									<TableRow>
 										<TableCell>Creado</TableCell>
 										<TableCell>
-											{selectedTherapist.dateCreation.toUTCString()}
+											{selectedTherapist.date_creation.toUTCString()}
 										</TableCell>
 									</TableRow>
 									<TableRow>
 										<TableCell>Es coordinador</TableCell>
 										<TableCell>
-											{selectedTherapist.isCoordinator ? 'Sí' : 'No'}
+											{selectedTherapist.is_coordinator ? 'Sí' : 'No'}
 										</TableCell>
 									</TableRow>
 								</TableBody>
@@ -126,7 +114,13 @@ const TherapistView = () => {
 							>
 								{e.name}
 							</ListItemButton>
-							<Button>Borrar</Button>
+							<Button
+								onClick={() => {
+									deleteTherapist(e.id);
+								}}
+							>
+								Borrar
+							</Button>
 						</ListItem>
 					))}
 					text='Listado de todos los terapeutas'

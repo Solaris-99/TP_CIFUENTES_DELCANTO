@@ -7,16 +7,20 @@ export const loginUser = async (
 	credentials: LoginCredentials
 ): Promise<LoginResponse> => {
 	try {
-		const response = await authEndpoints.login(credentials);
-		const { token, user: apiUser } = response.data;
+		const responseTokens = await authEndpoints.login(credentials);
+		const { token, refreshToken } = responseTokens.data;
+		localStorage.setItem('token', token);
+		localStorage.setItem('refreshToken', refreshToken);
 
+		const responseProfile = await authEndpoints.getProfile();
+		const apiUser = responseProfile.data;
 		const user: User = {
-			id: apiUser.id,
+			id: Number.parseInt(apiUser.id),
 			email: apiUser.email,
 			name: apiUser.name,
-			role: apiUser.role,
+			role: apiUser.is_coordinator ? 'coordinator' : 'therapist',
 		};
-		localStorage.setItem('token', token);
+
 		localStorage.setItem('role', user.role);
 
 		return { token, user };

@@ -1,8 +1,8 @@
-import type { Therapist } from '@/components/common/types/therapist';
 import {
 	type TherapistFormValues,
 	therapistSchema,
 } from '@/features/therapist/schema/therapistSchema';
+import type { Therapist } from '@/features/therapist/types/therapistsTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Button,
@@ -47,8 +47,8 @@ const AddTherapistModal: FC<AddTherapistModalProps> = ({
 			const mockedResponse: Therapist = {
 				...data,
 				id: Math.floor(Math.random() * 1000),
-				isCoordinator: false,
-				dateCreation: new Date(),
+				is_coordinator: false,
+				date_creation: new Date(),
 			};
 			onSubmitSuccess(mockedResponse);
 			reset();

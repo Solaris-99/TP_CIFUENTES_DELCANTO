@@ -1,6 +1,7 @@
 import AccordionList from '@/components/common/AccordionList';
 import type { Patient } from '@/components/common/types/patient';
-import type { Therapist } from '@/components/common/types/therapist';
+import type { Therapist } from '@/features/therapist/types/therapistsTypes';
+
 import CreatePatientForm from '@/features/patient/components/CreatePatientForm';
 import { Button, ListItemButton, Typography } from '@mui/material';
 import { AuthContext } from 'context/AuthContext';
@@ -23,16 +24,16 @@ const Home = () => {
 	const ther1: Therapist = {
 		id: 1,
 		name: 'juancito',
-		dateCreation: new Date(),
-		isCoordinator: false,
+		date_creation: new Date(),
+		is_coordinator: false,
 		email: 'jj@gmail.com',
 		title: 'psicologo',
 	};
 	const ther2: Therapist = {
 		id: 2,
 		name: 'pancracio',
-		dateCreation: new Date(),
-		isCoordinator: false,
+		date_creation: new Date(),
+		is_coordinator: false,
 		email: 'pan@gmail.com',
 		title: 'psicologo',
 	};

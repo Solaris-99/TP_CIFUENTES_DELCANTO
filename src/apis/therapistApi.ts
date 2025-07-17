@@ -12,6 +12,6 @@ export const therapistEndpoints = {
 		return api.delete(`/therapists/${id}`);
 	},
 	update: (id: number, therapist: Therapist) => {
-		return api.post<Therapist>(`/therapists/${id}`, therapist);
+		return api.patch<Therapist>(`/therapists/${id}`, therapist);
 	},
 };

@@ -1,5 +1,5 @@
 import AccordionList from '@/components/common/AccordionList';
-import type { Patient } from '@/components/common/types/patient';
+import type { Patient } from '@/features/patient/types/patient';
 import type { Therapist } from '@/features/therapist/types/therapistsTypes';
 
 import CreatePatientForm from '@/features/patient/components/CreatePatientForm';
@@ -14,12 +14,12 @@ const Home = () => {
 	const patient1: Patient = {
 		id: 1,
 		name: 'pepito',
-		dateCreation: new Date(),
+		date_creation: new Date(),
 	};
 	const patient2: Patient = {
 		id: 2,
 		name: 'juanita',
-		dateCreation: new Date(),
+		date_creation: new Date(),
 	};
 	const ther1: Therapist = {
 		id: 1,

@@ -1,6 +1,6 @@
 import SearchField from '@/components/SearchField';
 import DialogForm from '@/components/common/DialogForm';
-import type { Program } from '@/components/common/types/program';
+import type { Program } from '@/features/patient/types/program';
 import { MoreVert } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
 import CancelIcon from '@mui/icons-material/CancelOutlined';
@@ -24,31 +24,34 @@ import { useSearchParams } from 'react-router';
 const programsDefault: Program[] = [
 	{
 		id: 1,
-		dateCreation: new Date('2023-05-15'),
-		lastUpdated: new Date('2024-03-22'),
+		patient_id: 1,
+		date_creation: new Date('2023-05-15'),
+		last_updated: new Date('2024-03-22'),
 		name: 'Renacer Infantil',
 		antecedent: 'Programa para niños con traumas por separación familiar.',
 		status: 'Activo',
-		steps: [],
+		units: [],
 	},
 	{
 		id: 2,
-		dateCreation: new Date('2022-11-03'),
+		patient_id: 1,
+		date_creation: new Date('2022-11-03'),
 		name: 'Juega y Sana',
 		antecedent: 'Terapia lúdica para niños con trastornos emocionales leves.',
-		lastUpdated: new Date('2023-01-18'),
+		last_updated: new Date('2023-01-18'),
 		status: 'Completo',
-		steps: [],
+		units: [],
 	},
 	{
 		id: 3,
+		patient_id: 1,
 		name: 'Creciendo Fuertes',
-		dateCreation: new Date('2021-09-10'),
-		lastUpdated: new Date('2023-01-18'),
+		date_creation: new Date('2021-09-10'),
+		last_updated: new Date('2023-01-18'),
 		antecedent:
 			'Prevención y tratamiento de ansiedad en menores escolarizados.',
 		status: 'Suspendido',
-		steps: [],
+		units: [],
 	},
 ];
 
@@ -133,12 +136,13 @@ const ProgramAssignment = () => {
 							console.log(data);
 							const newProgram: Program = {
 								id: Math.ceil(Math.random() * 150 + 10),
-								dateCreation: new Date(),
-								lastUpdated: new Date(),
+								patient_id: 1,
+								date_creation: new Date(),
+								last_updated: new Date(),
 								name: data,
 								antecedent: '',
 								status: 'Activo',
-								steps: [],
+								units: [],
 							};
 							setPrograms([...programs, newProgram]);
 						}}

@@ -11,6 +11,7 @@ import api from './axios';
 
 export const patientsEndpoints = {
 	get: (id: number) => api.get<Patient>(`/patients/${id}`),
+	getByCurrentUser: () => api.get<Patient[]>('/patients/myPatients'),
 	getAll: () => api.get<Patient[]>('/patients/'),
 	delete: (id: number) => api.delete(`/patients/${id}`),
 	create: (patient: Patient) => api.post<Patient>('/patients/', patient),
@@ -73,7 +74,7 @@ export const patientRegistry = {
 	) =>
 		api.post(
 			`/patients/${patientId}/programs/${programId}/units/${unitId}/registry`,
-			registryValue
+			{ registry: registryValue }
 		),
 	delete: (
 		patientId: number,

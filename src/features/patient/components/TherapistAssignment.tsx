@@ -1,3 +1,9 @@
+import {
+	addTherapistToPatient,
+	getPatientTeam,
+	removeTherapistFromPatient,
+} from '@/features/patient/services/patientService';
+import type { Therapist } from '@/features/therapist/types/therapistsTypes'; // Adjust path as needed
 import AddIcon from '@mui/icons-material/AddCircleOutline';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {
@@ -15,17 +21,20 @@ import {
 	Stack,
 	Typography,
 } from '@mui/material';
-import { useState } from 'react';
-
-const therapistsData = [
-	{ id: 1, name: 'Dr. Smith', specialty: 'Lic. Psicología' },
-	{ id: 2, name: 'Dr. Johnson', specialty: 'Lic. Psicología' },
-	{ id: 3, name: 'Dr. Lee', specialty: 'Doc. Psicología' },
-];
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 
 const TherapistAssignment = () => {
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-	const [therapists, setTherapists] = useState(therapistsData);
+	const [therapists, setTherapists] = useState<Therapist[]>([]);
+	const { patientId } = useParams<{ patientId: string }>();
+
+	useEffect(() => {
+		if (!patientId) return;
+		getPatientTeam(Number(patientId))
+			.then(setTherapists)
+			.catch((err) => console.error(err.message));
+	}, [patientId]);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -35,14 +44,26 @@ const TherapistAssignment = () => {
 		setAnchorEl(null);
 	};
 
-	const handleDelete = (id: number) => {
-		console.log(`Delete therapist with id: ${id}`);
-		setTherapists(therapists.filter((e) => e.id !== id));
-		// Implement delete logic here
+	const handleDelete = async (id: number) => {
+		if (!patientId) return;
+		try {
+			await removeTherapistFromPatient(Number(patientId), id);
+			setTherapists((prev) => prev.filter((t) => t.id !== id));
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
-	const handleAdd = (therapist) => {
-		setTherapists([...therapists, therapist]);
+	const handleAdd = async (therapist: Therapist) => {
+		if (!patientId) return;
+		try {
+			await addTherapistToPatient(Number(patientId), therapist.id);
+			setTherapists((prev) =>
+				prev.some((t) => t.id === therapist.id) ? prev : [...prev, therapist]
+			);
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	const open = Boolean(anchorEl);
@@ -62,7 +83,7 @@ const TherapistAssignment = () => {
 				</Typography>
 				<IconButton
 					color='primary'
-					aria-label='add an person'
+					aria-label='add person'
 					aria-describedby={id}
 					onClick={handleClick}
 				>
@@ -82,19 +103,21 @@ const TherapistAssignment = () => {
 						horizontal: 'right',
 					}}
 				>
-					<List dense={true}>
-						{therapistsData.map((therapist, idx) => (
+					<List dense>
+						{therapists.map((therapist, idx) => (
 							<>
 								{idx !== 0 && (
-									<Divider key={therapist.id} variant='middle' component='li' />
+									<Divider
+										key={`divider-${therapist.id}`}
+										variant='middle'
+										component='li'
+									/>
 								)}
 								<ListItem
 									key={therapist.id}
 									secondaryAction={
 										<IconButton
-											onClick={() => {
-												handleAdd(therapist);
-											}}
+											onClick={() => handleAdd(therapist)}
 											edge='end'
 											aria-label='add'
 										>
@@ -103,11 +126,13 @@ const TherapistAssignment = () => {
 									}
 								>
 									<ListItemAvatar>
-										<Avatar sx={{ width: 32, height: 32 }}>AC</Avatar>
+										<Avatar sx={{ width: 32, height: 32 }}>
+											{therapist.name.charAt(0)}
+										</Avatar>
 									</ListItemAvatar>
 									<ListItemText
 										primary={therapist.name}
-										secondary='Specialty'
+										secondary={therapist.title}
 									/>
 								</ListItem>
 							</>
@@ -121,14 +146,13 @@ const TherapistAssignment = () => {
 						sx={{ height: '3rem' }}
 						key={therapist.id}
 						avatar={<Avatar>{therapist.name.charAt(0)}</Avatar>}
-						/* label={`${therapist.name}`} */
 						label={
 							<Stack direction='column' paddingInline='.8rem'>
 								<Typography variant='body1' lineHeight='1rem'>
 									{therapist.name}
 								</Typography>
 								<Typography variant='body2' color='textSecondary'>
-									{therapist.specialty}
+									{therapist.title}
 								</Typography>
 							</Stack>
 						}

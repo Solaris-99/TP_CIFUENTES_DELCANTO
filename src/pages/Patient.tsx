@@ -7,33 +7,6 @@ import StepTracing from '@/features/patient/components/StepTracing';
 import TherapistAssignment from '@/features/patient/components/TherapistAssignment';
 import { Grid, Paper } from '@mui/material';
 
-/* type ActionType = 'Pos' | 'Neg' | 'N/R';
-
-interface Note {
-  id: number;
-  stepId: number;
-  content: ActionType;
-  date: Date;
-  therapist: string;
-}
-
-interface Step {
-  id: number;
-  title: string;
-  status: 'Activo' | 'Suspendido' | 'Completo';
-  notes: Note[];
-}
-
-interface Program {
-  id: number;
-  dateCreation?: Date;
-  lastUpdated?: Date;
-  name: string;
-  antecedent?: string;
-  status?: string;
-  steps: Step[];
-} */
-
 const Patient = () => {
 	return (
 		<>

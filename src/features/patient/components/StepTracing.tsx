@@ -1,61 +1,90 @@
+import {
+	addRegistry,
+	deleteRegistry,
+	getRegistry,
+} from '@/features/patient/services/patientService';
+import type {
+	Registry,
+	RegistryValues,
+} from '@/features/patient/types/program';
 import { Delete } from '@mui/icons-material';
 import PositiveIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import NegativeIcon from '@mui/icons-material/HighlightOffRounded';
 import NeutralIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import {
 	Box,
-	Card,
-	CardContent,
-	Chip,
 	Divider,
 	IconButton,
-	Paper,
 	Stack,
 	Tab,
 	Tabs,
 	Typography,
-	styled,
 } from '@mui/material';
 import { green, grey, red } from '@mui/material/colors';
-import { useState } from 'react';
-import { type ActionType, ResponseItem } from './ResponseItem';
-
-interface Note {
-	id: number;
-	stepId: number;
-	content: ActionType;
-	date: Date;
-	therapist: string;
-}
-
-const step = {
-	title: 'titulo del paso',
-};
+import { useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router';
+import { ResponseItem } from './ResponseItem';
 
 const StepTracing = () => {
-	const [notes, setNotes] = useState<Note[]>([]);
+	const { patientId } = useParams();
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const [notes, setNotes] = useState<Registry[]>([]);
 	const [tabIndex, setTabIndex] = useState(0);
 
-	const handleAddNote = (type: ActionType) => {
-		setNotes((prev) => [
-			{
-				id: Date.now(),
-				stepId: 1,
-				content: type,
-				date: new Date(),
-				therapist: 'Cristian D.',
-			},
-			...prev,
-		]);
+	useEffect(() => {
+		const programId = searchParams.get('programId');
+		const unitId = searchParams.get('unitId');
+
+		if (patientId && programId && unitId) {
+			getRegistry(+patientId, +programId, +unitId)
+				.then((data) => {
+					setNotes(data);
+				})
+				.catch(console.error);
+		}
+	}, [searchParams, patientId]);
+
+	const handleAddNote = async (type: RegistryValues) => {
+		const programId = searchParams.get('programId');
+		const unitId = searchParams.get('unitId');
+		if (!patientId || !programId || !unitId) return;
+		try {
+			await addRegistry(+patientId, +programId, +unitId, type);
+			const updated = await getRegistry(+patientId, +programId, +unitId);
+			setNotes(updated);
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
-	const handleDeleteNote = (id: number) => {
-		setNotes((prev) => prev.filter((note) => note.id !== id));
+	const handleDeleteNote = async (id: number) => {
+		const programId = searchParams.get('programId');
+		const unitId = searchParams.get('unitId');
+		if (!patientId || !programId || !unitId) return;
+		try {
+			await deleteRegistry(+patientId, +programId, +unitId, id);
+			setNotes((prev) => prev.filter((note) => note.id !== id));
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
-	const selectedNotes = notes
-		.filter((note) => note.stepId === 1)
-		.sort((a, b) => b.date.getTime() - a.date.getTime());
+	const filteredNotes =
+		tabIndex === 0
+			? notes
+			: notes.filter((n) =>
+					tabIndex === 1
+						? n.value === '+'
+						: tabIndex === 2
+							? n.value === 'NR'
+							: tabIndex === 3
+								? n.value === '-'
+								: true
+				);
+
+	const getTabLabel = (value: RegistryValues) =>
+		notes.filter((n) => n.value === value).length;
 
 	return (
 		<Box flex={1.5}>
@@ -72,25 +101,26 @@ const StepTracing = () => {
 				<IconButton
 					aria-label='positive'
 					sx={{ color: green[400] }}
-					onClick={() => handleAddNote('Pos')}
+					onClick={() => handleAddNote('+')}
 				>
 					<PositiveIcon />
 				</IconButton>
 				<IconButton
 					aria-label='neutral'
 					sx={{ color: grey[400] }}
-					onClick={() => handleAddNote('N/R')}
+					onClick={() => handleAddNote('NR')}
 				>
 					<NeutralIcon />
 				</IconButton>
 				<IconButton
 					aria-label='negative'
 					sx={{ color: red[400] }}
-					onClick={() => handleAddNote('Neg')}
+					onClick={() => handleAddNote('-')}
 				>
 					<NegativeIcon />
 				</IconButton>
 			</Stack>
+
 			<Typography variant='subtitle2' mb={1}>
 				Historial
 			</Typography>
@@ -99,93 +129,52 @@ const StepTracing = () => {
 				onChange={(_, val) => setTabIndex(val)}
 				variant='standard'
 				sx={{
-					gap: 0,
 					width: '100%',
 					minHeight: 36,
 					'& .MuiTabs-flexContainer': {
 						display: 'flex',
 						justifyContent: 'space-around',
-						gap: 0,
 					},
 				}}
 			>
-				<Tab
-					label='Todos'
-					disableRipple
-					sx={{
-						minHeight: 36,
-						height: 36,
-						minWidth: 'auto',
-						padding: '0 4px',
-						flexShrink: 1,
-						'&.MuiButtonBase-root': {
-							minWidth: 'unset',
-						},
-					}}
-				/>
+				<Tab label='Todos' sx={{ minHeight: 36 }} />
 				<Tab
 					icon={<PositiveIcon fontSize='small' />}
 					iconPosition='start'
-					label='1'
-					disableRipple
-					sx={{
-						minHeight: 36,
-						height: 36,
-						minWidth: 'auto',
-						padding: '0 4px',
-						flexShrink: 1,
-						'&.MuiButtonBase-root': {
-							minWidth: 'unset',
-						},
-					}}
+					label={getTabLabel('+')}
+					sx={{ minHeight: 36 }}
 				/>
 				<Tab
 					icon={<NeutralIcon fontSize='small' />}
 					iconPosition='start'
-					label='1'
-					disableRipple
-					sx={{
-						minHeight: 36,
-						height: 36,
-						minWidth: 'auto',
-						padding: '0 4px',
-						flexShrink: 1,
-						'&.MuiButtonBase-root': {
-							minWidth: 'unset',
-						},
-					}}
+					label={getTabLabel('NR')}
+					sx={{ minHeight: 36 }}
 				/>
 				<Tab
 					icon={<NegativeIcon fontSize='small' />}
 					iconPosition='start'
-					label='1'
-					disableRipple
-					sx={{
-						minHeight: 36,
-						height: 36,
-						minWidth: 'auto',
-						padding: '0 4px',
-						flexShrink: 1,
-						'&.MuiButtonBase-root': {
-							minWidth: 'unset',
-						},
-					}}
+					label={getTabLabel('-')}
+					sx={{ minHeight: 36 }}
 				/>
 			</Tabs>
 
-			{step !== null && (
-				<Stack ml={1} mt={2} spacing={0.2}>
-					{selectedNotes.map((note) => (
+			<Stack ml={1} mt={2} spacing={0.2}>
+				{filteredNotes
+					.sort(
+						(a, b) =>
+							new Date(b.date_created).getTime() -
+							new Date(a.date_created).getTime()
+					)
+					.map((note) => (
 						<ResponseItem
 							key={note.id}
-							type={note.content}
-							date={note.date}
-							user={note.therapist}
-							onRemove={() => {}}
+							type={note.value}
+							date={new Date(note.date_created)}
+							user={`ID ${note.therapist_id}`}
+							onRemove={() => handleDeleteNote(note.id)}
 						/>
 					))}
-				</Stack>
-			)}
+			</Stack>
 		</Box>
 	);
 };

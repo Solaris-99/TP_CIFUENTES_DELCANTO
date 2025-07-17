@@ -7,31 +7,30 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import NeutralIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import { Box, IconButton, Paper, Typography } from '@mui/material';
 import type { FC } from 'react';
-
-export type ActionType = 'Pos' | 'Neg' | 'N/R';
+import type { RegistryValues } from '../types/program';
 
 interface ActionHistoryItemProps {
-	type: ActionType;
+	type: RegistryValues;
 	date: Date;
 	user: string;
 	onRemove?: () => void;
 }
 
-const getStyles = (type: ActionType) => {
+const getStyles = (type: RegistryValues) => {
 	switch (type) {
-		case 'Pos':
+		case '+':
 			return {
 				icon: <PositiveIcon sx={{ color: '#2e7d32' }} fontSize='small' />,
 				bgColor: '#e8f5e9',
 				color: '#2e7d32',
 			};
-		case 'Neg':
+		case '-':
 			return {
 				icon: <NegativeIcon sx={{ color: '#c62828' }} fontSize='small' />,
 				bgColor: '#ffebee',
 				color: '#c62828',
 			};
-		case 'N/R':
+		case 'NR':
 			return {
 				icon: <NeutralIcon sx={{ color: '#757575' }} fontSize='small' />,
 				bgColor: '#f5f5f5',
@@ -46,7 +45,6 @@ const getStyles = (type: ActionType) => {
 	}
 };
 
-// 👉 Formateador: 17/6, 23:15
 const formatDate = (date: Date): string => {
 	const day = date.getDate();
 	const month = date.getMonth() + 1;

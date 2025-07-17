@@ -1,4 +1,7 @@
 import { Box, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router';
+import type { Program } from '../types/program';
 
 const steps = Array.from({ length: 10 }, (_, i) => ({
 	id: i + 1,

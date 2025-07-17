@@ -1,3 +1,9 @@
+import {
+	getPatient,
+	getPatientPrograms,
+} from '@/features/patient/services/patientService';
+import type { Patient } from '@/features/patient/types/patient';
+import type { Program } from '@/features/patient/types/program';
 import CakeIcon from '@mui/icons-material/CakeOutlined';
 import CalendarIcon from '@mui/icons-material/CalendarMonth';
 import CheckIcon from '@mui/icons-material/CheckCircleOutline';
@@ -15,18 +21,76 @@ import {
 	Stack,
 	Typography,
 } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 
-const items = [
-	{ title: 'DNI', value: '123.123.123', icon: <TagIcon /> },
-	{ title: 'Edad', value: '13', icon: <CakeIcon /> },
-	{ title: 'Ingreso', value: '15/01/2025', icon: <CalendarIcon /> },
-];
+const formatDate = (date: Date | undefined) =>
+	date ? date.toLocaleDateString('es-AR') : '-';
+
+const calculateAge = (birthdate?: Date) => {
+	if (!birthdate) return '-';
+	const today = new Date();
+	let age = today.getFullYear() - birthdate.getFullYear();
+	const m = today.getMonth() - birthdate.getMonth();
+	if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
+		age--;
+	}
+	return age.toString();
+};
 
 const PatientInfo = () => {
+	const { patientId } = useParams();
+	const [patient, setPatient] = useState<Patient | null>(null);
+	const [programs, setPrograms] = useState<Program[]>([]);
+
+	useEffect(() => {
+		if (!patientId) return;
+
+		const fetchPatient = async () => {
+			try {
+				const data = await getPatient(Number(patientId));
+				setPatient(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		const fetchPrograms = async () => {
+			try {
+				const data = await getPatientPrograms(Number(patientId));
+				setPrograms(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		fetchPatient();
+		fetchPrograms();
+	}, [patientId]);
+
+	const countByStatus = (status: string) =>
+		programs.filter((p) => p.status === status).length;
+
+	if (!patient) return null;
+
+	const items = [
+		{ title: 'DNI', value: patient.dni?.toString() ?? '-', icon: <TagIcon /> },
+		{
+			title: 'Edad',
+			value: calculateAge(patient.birthdate),
+			icon: <CakeIcon />,
+		},
+		{
+			title: 'Ingreso',
+			value: formatDate(patient.date_creation),
+			icon: <CalendarIcon />,
+		},
+	];
+
 	return (
 		<Paper variant='outlined' sx={{ padding: '1rem', height: '100%' }}>
 			<Typography variant='h5' component='h2'>
-				Nombre del Paciente
+				{patient.name}
 			</Typography>
 			<Box>
 				<List sx={{ display: 'flex', justifyContent: 'flex-start' }}>
@@ -42,19 +106,19 @@ const PatientInfo = () => {
 				<Stack direction='row' gap={1}>
 					<Chip
 						icon={<CheckIcon fontSize='small' />}
-						label='Completos 2'
+						label={`Completos ${countByStatus('Completo')}`}
 						color='success'
 						variant='outlined'
 					/>
 					<Chip
 						icon={<InfoIcon fontSize='small' />}
-						label='Activos 10'
+						label={`Activos ${countByStatus('Activo')}`}
 						color='primary'
 						variant='outlined'
 					/>
 					<Chip
 						icon={<CancelInfo fontSize='small' />}
-						label='Suspendidos 25'
+						label={`Suspendidos ${countByStatus('Suspendido')}`}
 						color='warning'
 						variant='outlined'
 					/>

@@ -6,7 +6,7 @@ export interface Unit {
 	program_id: number;
 	created: Date;
 	updated: Date;
-	title: string;
+	name: string;
 	status: Status;
 }
 
@@ -18,7 +18,6 @@ export interface Program {
 	name: string;
 	antecedent: string;
 	status: Status;
-	units: Unit[];
 }
 
 export interface Registry {

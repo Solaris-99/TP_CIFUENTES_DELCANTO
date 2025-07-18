@@ -2,18 +2,46 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import { Box, IconButton, Paper, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
+import {
+	getProgramBackground,
+	updateProgramBackground,
+} from '../services/patientService';
 
-const Background = (props: { background: string }) => {
-	const [value, setValue] = useState(props.background);
+const Background = () => {
+	const [antecedent, setAntecedent] = useState('');
+	const [previusAntecedent, setPreviusAntecedent] = useState('');
 	const [isEditing, setIsEditing] = useState(false);
+	const [searchParams] = useSearchParams();
+
+	useEffect(() => {
+		getProgramBackground(Number(searchParams.get('programId'))).then(
+			(response) => {
+				if (response) {
+					setAntecedent(response);
+					setPreviusAntecedent(response);
+				}
+			}
+		);
+	}, [searchParams]);
 
 	const handleEditClick = () => setIsEditing(true);
+
 	const handleCancelClick = () => {
-		setValue(props.background);
+		setAntecedent(previusAntecedent);
 		setIsEditing(false);
 	};
-	const handleSaveClick = () => setIsEditing(false);
+
+	const handleSaveClick = () => {
+		setIsEditing(false);
+		updateProgramBackground(
+			Number(searchParams.get('programId')),
+			antecedent
+		).then(() => {
+			setPreviusAntecedent(antecedent);
+		});
+	};
 
 	return (
 		<Paper variant='outlined' sx={{ padding: '1rem', height: '100%' }}>
@@ -38,8 +66,8 @@ const Background = (props: { background: string }) => {
 			</Box>
 			<TextField
 				fullWidth
-				value={value}
-				onChange={(e) => setValue(e.target.value)}
+				value={antecedent}
+				onChange={(e) => setAntecedent(e.target.value)}
 				disabled={!isEditing}
 				variant='outlined'
 				size='small'

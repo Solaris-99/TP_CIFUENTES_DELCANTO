@@ -9,13 +9,13 @@ export interface ApiErrorResponse {
 	path: string;
 }
 
-const api: AxiosInstance = axios.create({
+const client: AxiosInstance = axios.create({
 	baseURL: API_BASE_URL,
 	headers: API_HEADERS,
 	timeout: API_TIMEOUT,
 });
 
-api.interceptors.request.use(
+client.interceptors.request.use(
 	(config) => {
 		const token = localStorage.getItem('refreshToken');
 		if (token) {
@@ -28,7 +28,7 @@ api.interceptors.request.use(
 	}
 );
 
-api.interceptors.response.use(
+client.interceptors.response.use(
 	(response) => response,
 	(error: AxiosError<ApiErrorResponse>) => {
 		console.error('Error de API:', error.response?.data || error.message);
@@ -41,4 +41,4 @@ api.interceptors.response.use(
 	}
 );
 
-export default api;
+export default client;

@@ -1,4 +1,4 @@
-import type { Patient } from '@/components/common/types/patient';
+import type { Patient } from '@/features/patient/types/patient';
 import {
 	Button,
 	FormControl,

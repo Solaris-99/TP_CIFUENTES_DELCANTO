@@ -1,6 +1,11 @@
 import SearchField from '@/components/SearchField';
 import DialogForm from '@/components/common/DialogForm';
-import type { Program } from '@/components/common/types/program';
+import {
+	addPatientProgram,
+	getPatientPrograms,
+	removeProgram,
+} from '@/features/patient/services/patientService';
+import type { Program } from '@/features/patient/types/program';
 import { MoreVert } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
 import CancelIcon from '@mui/icons-material/CancelOutlined';
@@ -19,81 +24,77 @@ import {
 	Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router';
-
-const programsDefault: Program[] = [
-	{
-		id: 1,
-		dateCreation: new Date('2023-05-15'),
-		lastUpdated: new Date('2024-03-22'),
-		name: 'Renacer Infantil',
-		antecedent: 'Programa para niños con traumas por separación familiar.',
-		status: 'Activo',
-		steps: [],
-	},
-	{
-		id: 2,
-		dateCreation: new Date('2022-11-03'),
-		name: 'Juega y Sana',
-		antecedent: 'Terapia lúdica para niños con trastornos emocionales leves.',
-		lastUpdated: new Date('2023-01-18'),
-		status: 'Completo',
-		steps: [],
-	},
-	{
-		id: 3,
-		name: 'Creciendo Fuertes',
-		dateCreation: new Date('2021-09-10'),
-		lastUpdated: new Date('2023-01-18'),
-		antecedent:
-			'Prevención y tratamiento de ansiedad en menores escolarizados.',
-		status: 'Suspendido',
-		steps: [],
-	},
-];
+import { useParams, useSearchParams } from 'react-router';
 
 const ProgramAssignment = () => {
 	const [tabIndex, setTabIndex] = useState(0);
 	const [programs, setPrograms] = useState<Program[]>([]);
-	const [addProgramDialogOpen, setAddProgramDialogOpen] = useState(false);
 	const [filteredPrograms, setFilteredPrograms] = useState<Program[]>([]);
 	const [selectedItem, setSelectedItem] = useState<number | null>(null);
+	const [addProgramDialogOpen, setAddProgramDialogOpen] = useState(false);
 	const [searchParams, setSearchParams] = useSearchParams();
+	const { patientId } = useParams();
 
 	useEffect(() => {
-		setPrograms(programsDefault);
-		setFilteredPrograms(programsDefault);
-		const programId = searchParams.get('programId');
-		if (programId) {
-			const program = programsDefault.find(
-				(p) => p.id.toString() === programId
-			);
-			if (program) {
-				const itemIdx = programsDefault.indexOf(program);
-				setSelectedItem(itemIdx);
-				//setTabIndex(program.status === 'Activo' ? 0 : program.status === 'Completo' ? 1 : program.status === 'Suspendido' ? 2 : 0);
+		if (!patientId) return;
+
+		getPatientPrograms(Number(patientId)).then((data) => {
+			setPrograms(data.filter((p) => p.status === tabFilter(tabIndex)));
+			setFilteredPrograms(data);
+
+			const programId = searchParams.get('programId');
+			if (programId) {
+				const program = data.find((p) => p.id.toString() === programId);
+				if (program) {
+					const itemIdx = data.indexOf(program);
+					setSelectedItem(itemIdx);
+				}
 			}
+		});
+	}, [patientId, searchParams, tabIndex]);
+
+	const tabFilter = (tabIndex: number) => {
+		switch (tabIndex) {
+			case 0:
+				return 'Activo';
+			case 1:
+				return 'Completado';
+			case 2:
+				return 'Suspendido';
+			default:
+				return 'Activo';
 		}
-	}, [searchParams]);
+	};
+
+	const handleAddProgram = async (name: string) => {
+		if (!patientId) return;
+		const program = await addPatientProgram(Number(patientId), name);
+		console.log(`Programa agregado: ${JSON.stringify(program)}`);
+		if (program) {
+			const updatedPrograms = [...programs, program];
+			setPrograms(updatedPrograms);
+			setFilteredPrograms(updatedPrograms);
+		}
+	};
 
 	const handleSelectProgram = (id: number, itemIdx: number) => {
 		setSelectedItem(itemIdx);
 		setSearchParams({ programId: id.toString() });
 	};
-	const handleRemoveProgram = (id: number) => {
+
+	const handleRemoveProgram = async (id: number) => {
+		const response = await removeProgram(id);
+		if (response.status !== 204) {
+			console.error('Error al eliminar el programa:', response);
+			return;
+		}
 		setPrograms(programs.filter((p) => p.id !== id));
-		console.log(`Eliminar programa con id: ${id}`);
 	};
 
 	return (
 		<Paper variant='outlined' sx={{ padding: '.5rem' }}>
 			<Box height='5rem'>
-				<Typography
-					variant='h6'
-					component='h2'
-					width={'100%'}
-					textAlign='center'
-				>
+				<Typography variant='h6' component='h2' width='100%' textAlign='center'>
 					Programas
 				</Typography>
 				<Tabs
@@ -129,19 +130,7 @@ const ProgramAssignment = () => {
 						</IconButton>
 					</Tooltip>
 					<DialogForm
-						onSubmitSuccess={(data) => {
-							console.log(data);
-							const newProgram: Program = {
-								id: Math.ceil(Math.random() * 150 + 10),
-								dateCreation: new Date(),
-								lastUpdated: new Date(),
-								name: data,
-								antecedent: '',
-								status: 'Activo',
-								steps: [],
-							};
-							setPrograms([...programs, newProgram]);
-						}}
+						onSubmitSuccess={handleAddProgram}
 						title='Añadir un programa'
 						fieldLabel='Nombre del Programa'
 						open={addProgramDialogOpen}
@@ -171,9 +160,7 @@ const ProgramAssignment = () => {
 							<ListItemButton
 								selected={idx === selectedItem}
 								onClick={() => handleSelectProgram(program.id, idx)}
-								sx={{
-									paddingInline: '.5rem',
-								}}
+								sx={{ paddingInline: '.5rem' }}
 							>
 								<ListItemText
 									slotProps={{

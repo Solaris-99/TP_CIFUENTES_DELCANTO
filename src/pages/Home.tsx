@@ -1,45 +1,29 @@
 import AccordionList from '@/components/common/AccordionList';
-import type { Patient } from '@/components/common/types/patient';
-import type { Therapist } from '@/features/therapist/types/therapistsTypes';
+import type { Patient } from '@/features/patient/types/patient';
 
 import CreatePatientForm from '@/features/patient/components/CreatePatientForm';
+import {
+	getCurrentUserPatients,
+	getPatients,
+} from '@/features/patient/services/patientService';
 import { Button, ListItemButton, Typography } from '@mui/material';
 import { AuthContext } from 'context/AuthContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 const Home = () => {
 	const authContext = useContext(AuthContext);
+	const [userPatients, setUserPatients] = useState<Patient[]>([]);
 	const user = authContext?.user;
-	// Mock data for patients in services
-	const patient1: Patient = {
-		id: 1,
-		name: 'pepito',
-		dateCreation: new Date(),
-	};
-	const patient2: Patient = {
-		id: 2,
-		name: 'juanita',
-		dateCreation: new Date(),
-	};
-	const ther1: Therapist = {
-		id: 1,
-		name: 'juancito',
-		date_creation: new Date(),
-		is_coordinator: false,
-		email: 'jj@gmail.com',
-		title: 'psicologo',
-	};
-	const ther2: Therapist = {
-		id: 2,
-		name: 'pancracio',
-		date_creation: new Date(),
-		is_coordinator: false,
-		email: 'pan@gmail.com',
-		title: 'psicologo',
-	};
+	const [allPatients, setAllPatients] = useState<Patient[]>([]);
+
+	useEffect(() => {
+		getCurrentUserPatients().then((data) => setUserPatients(data));
+		if (localStorage.getItem('role') === 'coordinator') {
+			getPatients().then((data) => setAllPatients(data));
+		}
+	}, []);
+
 	const [createPatientModalOpen, setCreatePatientModalOpen] = useState(false);
-	const mockPatients = [patient1, patient2];
-	const mockTher = [ther1, ther2];
 
 	return (
 		<>
@@ -47,7 +31,7 @@ const Home = () => {
 				Bienvenido{user ? `, ${user.name}` : null}
 			</Typography>{' '}
 			<AccordionList
-				items={mockPatients.map((e) => (
+				items={userPatients.map((e) => (
 					<ListItemButton key={`p-${e.id}`} href={`/patient/${e.id}`}>
 						{e.name}
 					</ListItemButton>
@@ -57,27 +41,29 @@ const Home = () => {
 				defaultExpanded
 			/>
 			{/**Solo para los coordinadores */}
-			<AccordionList
-				items={mockPatients.map((e) => (
-					<ListItemButton key={`p-${e.id}`} href={`/patient/${e.id}`}>
-						{e.name}
-					</ListItemButton>
-				))}
-				text='Listado de todos los pacientes'
-				title='Todos los pacientes'
-				addButton
-				buttonFunction={() => {
-					setCreatePatientModalOpen(true);
-				}}
-			/>
 			{localStorage.getItem('role') === 'coordinator' ? (
-				<Button
-					style={{ margin: '0 auto', display: 'block', width: 'fit-content' }}
-					variant='contained'
-					href='/therapist'
-				>
-					Administrar terapeutas
-				</Button>
+				<>
+					<AccordionList
+						items={allPatients.map((e) => (
+							<ListItemButton key={`p-${e.id}`} href={`/patient/${e.id}`}>
+								{e.name}
+							</ListItemButton>
+						))}
+						text='Listado de todos los pacientes'
+						title='Todos los pacientes'
+						addButton
+						buttonFunction={() => {
+							setCreatePatientModalOpen(true);
+						}}
+					/>
+					<Button
+						style={{ margin: '0 auto', display: 'block', width: 'fit-content' }}
+						variant='contained'
+						href='/therapist'
+					>
+						Administrar terapeutas
+					</Button>
+				</>
 			) : null}
 			<CreatePatientForm
 				open={createPatientModalOpen}

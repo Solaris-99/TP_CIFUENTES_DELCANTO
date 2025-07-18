@@ -1,6 +1,10 @@
 import SearchField from '@/components/SearchField';
 import DialogForm from '@/components/common/DialogForm';
-import type { Program, Step } from '@/components/common/types/program';
+import {
+	addUnit,
+	getProgramUnits,
+} from '@/features/patient/services/patientService';
+import type { Unit } from '@/features/patient/types/program';
 import { MoreVert } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
 import {
@@ -17,67 +21,12 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
-
-const programsDefault: Program[] = [
-	{
-		id: 1,
-		dateCreation: new Date('2023-05-15'),
-		lastUpdated: new Date('2024-03-22'),
-		name: 'Renacer Infantil',
-		antecedent: 'Programa para niños con traumas por separación familiar.',
-		status: 'Activo',
-		steps: Array.from({ length: Math.ceil(Math.random() * 15) }, (_, i) => ({
-			id: i + 1,
-			title: `Paso ${i + 1}`,
-			status: 'Activo',
-			created: new Date(),
-			updated: new Date(),
-			responses: Array.from(
-				{ length: Math.ceil(Math.random() * 5) },
-				(_, j) => ({
-					id: j + 1,
-					title: `Respuesta ${j + 1}`,
-					status: Math.random() > 0.5 ? 'Activo' : 'Completo',
-				})
-			),
-		})),
-	},
-	{
-		id: 2,
-		dateCreation: new Date('2022-11-03'),
-		name: 'Juega y Sana',
-		antecedent: 'Terapia lúdica para niños con trastornos emocionales leves.',
-		lastUpdated: new Date('2023-01-18'),
-		status: 'Completo',
-		steps: Array.from({ length: Math.ceil(Math.random() * 15) }, (_, i) => ({
-			id: i + 1,
-			title: `Paso ${i + 1}`,
-			status: 'Activo',
-			created: new Date(),
-			updated: new Date(),
-		})),
-	},
-	{
-		id: 3,
-		name: 'Creciendo Fuertes',
-		dateCreation: new Date('2021-09-10'),
-		lastUpdated: new Date('2023-01-18'),
-		antecedent:
-			'Prevención y tratamiento de ansiedad en menores escolarizados.',
-		status: 'Suspendido',
-		steps: Array.from({ length: Math.ceil(Math.random() * 15) }, (_, i) => ({
-			id: i + 1,
-			title: `Paso ${i + 1}`,
-			status: 'Activo',
-			created: new Date(),
-			updated: new Date(),
-		})),
-	},
-];
+import { useParams } from 'react-router';
 
 export default function ProgramSteps() {
-	const [steps, setSteps] = useState<Step[]>([]);
-	const [filteredSteps, setFilteredSteps] = useState<Step[]>([]);
+	const { patientId } = useParams();
+	const [steps, setSteps] = useState<Unit[]>([]);
+	const [filteredSteps, setFilteredSteps] = useState<Unit[]>([]);
 	const [addStepDialogOpen, setAddStepDialogOpen] = useState(false);
 
 	const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
@@ -86,24 +35,17 @@ export default function ProgramSteps() {
 
 	useEffect(() => {
 		const programId = searchParams.get('programId');
-		const unitId = searchParams.get('unitId');
-
-		if (unitId) {
-			// get unit by id in service
-		}
 
 		if (programId) {
-			const program = programsDefault.find(
-				(p) => p.id.toString() === programId
-			);
-			if (program?.steps) {
-				setSteps(program.steps);
-			} else {
-				setSteps([]);
-				setFilteredSteps([]);
+			const id = Number(programId);
+			if (!Number.isNaN(id)) {
+				getProgramUnits(Number(patientId), id).then((units) => {
+					setSteps(units);
+					setFilteredSteps(units);
+				});
 			}
 		}
-	}, [searchParams]);
+	}, [searchParams, patientId]);
 
 	const handleMenuOpen = (
 		event: React.MouseEvent<HTMLElement>,
@@ -118,9 +60,14 @@ export default function ProgramSteps() {
 		setMenuStepId(null);
 	};
 
-	const handleStatusChange = (status: Step['status']) => {
+	const handleStatusChange = (status: Unit['status']) => {
 		if (menuStepId !== null) {
 			setSteps((prev) =>
+				prev.map((step) =>
+					step.id === menuStepId ? { ...step, status } : step
+				)
+			);
+			setFilteredSteps((prev) =>
 				prev.map((step) =>
 					step.id === menuStepId ? { ...step, status } : step
 				)
@@ -129,11 +76,23 @@ export default function ProgramSteps() {
 		handleMenuClose();
 	};
 
-	const handleStepSelect = (step: Step) => {
+	const handleStepSelect = (step: Unit) => {
 		if (step) {
 			setSearchParams((searchParams) => {
 				searchParams.set('unitId', step.id.toString());
 				return searchParams;
+			});
+		}
+	};
+
+	const handleSubmitUnit = (data) => {
+		const programId = Number(searchParams.get('programId'));
+		if (!Number.isNaN(programId)) {
+			addUnit(programId, data).then((newUnit) => {
+				if (newUnit) {
+					setSteps([...steps, newUnit]);
+					setFilteredSteps([...filteredSteps, newUnit]);
+				}
 			});
 		}
 	};
@@ -144,7 +103,7 @@ export default function ProgramSteps() {
 				<Box display='flex'>
 					<SearchField
 						data={steps}
-						searchKey='title'
+						searchKey='name'
 						onFiltered={setFilteredSteps}
 						placeholder='Buscar item'
 					/>
@@ -152,26 +111,14 @@ export default function ProgramSteps() {
 						<IconButton
 							aria-label='add item'
 							size='small'
-							onClick={() => {
-								setAddStepDialogOpen(true);
-							}}
+							onClick={() => setAddStepDialogOpen(true)}
 							sx={{ marginTop: '1rem' }}
 						>
 							<AddIcon />
 						</IconButton>
 					</Tooltip>
 					<DialogForm
-						onSubmitSuccess={(data) => {
-							console.log(data);
-							const newStep: Step = {
-								id: Math.ceil(Math.random() * 150 + 10),
-								title: data,
-								status: 'Activo',
-								created: new Date(),
-								updated: new Date(),
-							};
-							setSteps([...steps, newStep]);
-						}}
+						onSubmitSuccess={handleSubmitUnit}
 						title='Añadir un paso'
 						fieldLabel='Nombre del paso'
 						open={addStepDialogOpen}
@@ -179,8 +126,8 @@ export default function ProgramSteps() {
 						handleClose={() => setAddStepDialogOpen(false)}
 					/>
 				</Box>
-				<List dense={true} sx={{ maxHeight: '25rem', overflowY: 'auto' }}>
-					{filteredSteps.map((step, idx) => (
+				<List dense sx={{ maxHeight: '25rem', overflowY: 'auto' }}>
+					{filteredSteps.map((step) => (
 						<ListItem
 							key={step.id}
 							disableGutters
@@ -214,11 +161,9 @@ export default function ProgramSteps() {
 							<ListItemButton
 								selected={step.id === Number(searchParams.get('unitId'))}
 								onClick={() => handleStepSelect(step)}
-								sx={{
-									paddingInline: '.5rem',
-								}}
+								sx={{ paddingInline: '.5rem' }}
 							>
-								<ListItemText primary={step.title} />
+								<ListItemText primary={step.name} />
 							</ListItemButton>
 						</ListItem>
 					))}
@@ -230,7 +175,7 @@ export default function ProgramSteps() {
 				open={Boolean(menuAnchorEl)}
 				onClose={handleMenuClose}
 			>
-				{(['Activo', 'Completo', 'Suspendido'] as Step['status'][]).map(
+				{(['Activo', 'Completo', 'Suspendido'] as Unit['status'][]).map(
 					(status) => (
 						<MenuItem key={status} onClick={() => handleStatusChange(status)}>
 							{status}

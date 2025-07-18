@@ -1,6 +1,6 @@
 import AccordionList from '@/components/common/AccordionList';
-import type { Patient } from '@/components/common/types/patient';
 import AddPatientForm from '@/features/patient/components/AddPatientForm';
+import type { Patient } from '@/features/patient/types/patient';
 import AddTherapistModal from '@/features/therapist/components/AddTherapistModal';
 import {
 	deleteTherapist,
@@ -39,12 +39,12 @@ const TherapistView = () => {
 	const patient1: Patient = {
 		id: 1,
 		name: 'pepito',
-		dateCreation: new Date(),
+		date_creation: new Date(),
 	};
 	const patient2: Patient = {
 		id: 2,
 		name: 'juanita',
-		dateCreation: new Date(),
+		date_creation: new Date(),
 	};
 	const mockPatients = [patient1, patient2];
 

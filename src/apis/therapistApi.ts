@@ -1,17 +1,17 @@
 import type { Therapist } from '@/features/therapist/types/therapistsTypes';
-import api from './axios';
+import client from './axios';
 
 export const therapistEndpoints = {
 	get: (id: number) => {
-		return api.get<Therapist>(`/therapists/${id}`);
+		return client.get<Therapist>(`/therapists/${id}`);
 	},
 	getAll: () => {
-		return api.get<Therapist[]>('/therapists/');
+		return client.get<Therapist[]>('/therapists/');
 	},
 	delete: (id: number) => {
-		return api.delete(`/therapists/${id}`);
+		return client.delete(`/therapists/${id}`);
 	},
 	update: (id: number, therapist: Therapist) => {
-		return api.post<Therapist>(`/therapists/${id}`, therapist);
+		return client.post<Therapist>(`/therapists/${id}`, therapist);
 	},
 };

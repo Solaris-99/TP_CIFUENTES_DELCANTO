@@ -1,6 +1,10 @@
 import SearchField from '@/components/SearchField';
 import DialogForm from '@/components/common/DialogForm';
-import { getPatientPrograms } from '@/features/patient/services/patientService';
+import {
+	addPatientProgram,
+	getPatientPrograms,
+	removeProgram,
+} from '@/features/patient/services/patientService';
 import type { Program } from '@/features/patient/types/program';
 import { MoreVert } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
@@ -35,7 +39,7 @@ const ProgramAssignment = () => {
 		if (!patientId) return;
 
 		getPatientPrograms(Number(patientId)).then((data) => {
-			setPrograms(data);
+			setPrograms(data.filter((p) => p.status === tabFilter(tabIndex)));
 			setFilteredPrograms(data);
 
 			const programId = searchParams.get('programId');
@@ -44,20 +48,47 @@ const ProgramAssignment = () => {
 				if (program) {
 					const itemIdx = data.indexOf(program);
 					setSelectedItem(itemIdx);
-					// Optional: Set tabIndex based on status
 				}
 			}
 		});
-	}, [patientId, searchParams]);
+	}, [patientId, searchParams, tabIndex]);
+
+	const tabFilter = (tabIndex: number) => {
+		switch (tabIndex) {
+			case 0:
+				return 'Activo';
+			case 1:
+				return 'Completado';
+			case 2:
+				return 'Suspendido';
+			default:
+				return 'Activo';
+		}
+	};
+
+	const handleAddProgram = async (name: string) => {
+		if (!patientId) return;
+		const program = await addPatientProgram(Number(patientId), name);
+		console.log(`Programa agregado: ${JSON.stringify(program)}`);
+		if (program) {
+			const updatedPrograms = [...programs, program];
+			setPrograms(updatedPrograms);
+			setFilteredPrograms(updatedPrograms);
+		}
+	};
 
 	const handleSelectProgram = (id: number, itemIdx: number) => {
 		setSelectedItem(itemIdx);
 		setSearchParams({ programId: id.toString() });
 	};
 
-	const handleRemoveProgram = (id: number) => {
+	const handleRemoveProgram = async (id: number) => {
+		const response = await removeProgram(id);
+		if (response.status !== 204) {
+			console.error('Error al eliminar el programa:', response);
+			return;
+		}
 		setPrograms(programs.filter((p) => p.id !== id));
-		console.log(`Eliminar programa con id: ${id}`);
 	};
 
 	return (
@@ -99,21 +130,7 @@ const ProgramAssignment = () => {
 						</IconButton>
 					</Tooltip>
 					<DialogForm
-						onSubmitSuccess={(data) => {
-							if (!patientId) return;
-							const newProgram: Program = {
-								id: Math.ceil(Math.random() * 150 + 10),
-								patient_id: Number(patientId),
-								date_creation: new Date(),
-								last_updated: new Date(),
-								name: data,
-								antecedent: '',
-								status: 'Activo',
-							};
-							const updatedPrograms = [...programs, newProgram];
-							setPrograms(updatedPrograms);
-							setFilteredPrograms(updatedPrograms);
-						}}
+						onSubmitSuccess={handleAddProgram}
 						title='Añadir un programa'
 						fieldLabel='Nombre del Programa'
 						open={addProgramDialogOpen}

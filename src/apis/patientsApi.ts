@@ -7,6 +7,7 @@ import type {
 	Unit,
 } from '@/features/patient/types/program';
 import type { Therapist } from '@/features/therapist/types/therapistsTypes';
+import type { AxiosResponse } from 'axios';
 import api from './axios';
 
 export const patientsEndpoints = {
@@ -21,7 +22,7 @@ export const patientTeamEndpoints = {
 	get: (patientId: number) =>
 		api.get<Therapist[]>(`/patients/${patientId}/team`),
 	addTherapist: (patientId: number, therapistId: number) =>
-		api.post(`/patients/${patientId}/team`, therapistId),
+		api.post(`/patients/${patientId}/team`, { therapistId }),
 	removeTherapist: (patientId: number, therapistId: number) =>
 		api.delete(`/patients/${patientId}/team/${therapistId}`),
 };
@@ -29,26 +30,23 @@ export const patientTeamEndpoints = {
 export const patientProgramEndpoints = {
 	get: (patientId: number) =>
 		api.get<Program[]>(`/patients/${patientId}/programs`),
-	add: (patientId: number, program: Program) =>
-		api.post(`/patients/${patientId}/programs`, program),
+	getById: (programId: number) =>
+		api.get<Program>(`/patients/0/programs/${programId}`),
+	add: (patientId: number, name: string): Promise<AxiosResponse<Program>> =>
+		api.post(`/patients/${patientId}/programs`, { name }),
+	remove: (programId: number) =>
+		api.delete(`/patients/0/programs/${programId}`),
 	updateStatus: (patientId: number, programId: number, status: Status) =>
 		api.patch(`/patients/${patientId}/programs/${programId}`, status),
-	updateBackground: (
-		patientId: number,
-		programId: number,
-		background: string
-	) =>
-		api.put(
-			`/patients/${patientId}/programs/${programId}/background`,
-			background
-		),
+	updateBackground: (programId: number, background: string) =>
+		api.put(`/patients/0/programs/${programId}/background`, { background }),
 };
 
 export const patientUnitsEndpoints = {
 	get: (patientId: number, programId: number) =>
 		api.get<Unit[]>(`/patients/${patientId}/programs/${programId}/units`),
-	add: (patientId: number, programId: number, unit: Unit) =>
-		api.post(`/patients/${patientId}/programs/${programId}/units`, unit),
+	add: (programId: number, name: string): Promise<AxiosResponse<Unit>> =>
+		api.post(`/patients/0/programs/${programId}/units`, { name }),
 	updateStatus: (
 		patientId: number,
 		programId: number,

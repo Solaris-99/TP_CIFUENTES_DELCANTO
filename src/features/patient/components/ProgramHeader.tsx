@@ -1,15 +1,19 @@
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
+import { getPatientProgram } from '../services/patientService';
 import type { Program } from '../types/program';
 
-const steps = Array.from({ length: 10 }, (_, i) => ({
-	id: i + 1,
-	title: `Paso ${i + 1}`,
-	status: i < 5 ? 'Completo' : 'Activo', // Simulando algunos pasos completos
-}));
-
 const ProgramHeader = () => {
+	const [program, setProgram] = useState<Program>();
+	const [searchParams] = useSearchParams();
+
+	useEffect(() => {
+		getPatientProgram(Number(searchParams.get('programId'))).then((program) => {
+			setProgram(program);
+		});
+	}, [searchParams]);
+
 	return (
 		<Box
 			display='flex'
@@ -20,16 +24,15 @@ const ProgramHeader = () => {
 		>
 			<Box>
 				<Typography variant='h5' fontWeight={600}>
-					Nombre del programa
+					{program ? program.name : 'Cargando...'}
 				</Typography>
 				<Typography variant='body2' color='text.secondary'>
-					{steps.length} pasos en total
+					{program ? program.unit_count : 0} unidades en total
 				</Typography>
 			</Box>
 			<Box textAlign={'right'}>
 				<Typography color='error' fontWeight={600}>
-					{steps.filter((s) => s.status === 'Completo').length}/{steps.length}{' '}
-					completados
+					{program?.unit_completed_count}/{program?.unit_count} completados
 				</Typography>
 			</Box>
 		</Box>

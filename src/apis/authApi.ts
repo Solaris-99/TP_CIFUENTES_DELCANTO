@@ -4,7 +4,7 @@ import type {
 	User,
 	UserRole,
 } from '@/features/auth/types/authTypes';
-import api from './axios';
+import client from './axios';
 
 interface AuthSuccessResponse {
 	token: string;
@@ -22,10 +22,10 @@ interface Profile {
 
 export const authEndpoints = {
 	login: (credentials: LoginCredentials) =>
-		api.post<AuthSuccessResponse>('/auth', credentials),
-	getProfile: () => api.get<Profile>('/auth/profile'),
+		client.post<AuthSuccessResponse>('/auth', credentials),
+	getProfile: () => client.get<Profile>('/auth/profile'),
 	register: (data: RegisterData) =>
-		api.post<AuthSuccessResponse>('/auth/register', data),
+		client.post<AuthSuccessResponse>('/auth/register', data),
 };
 
 // export const authEndpoints = {

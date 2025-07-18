@@ -1,6 +1,9 @@
 import SearchField from '@/components/SearchField';
 import DialogForm from '@/components/common/DialogForm';
-import { getProgramUnits } from '@/features/patient/services/patientService';
+import {
+	addUnit,
+	getProgramUnits,
+} from '@/features/patient/services/patientService';
 import type { Unit } from '@/features/patient/types/program';
 import { MoreVert } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
@@ -82,6 +85,18 @@ export default function ProgramSteps() {
 		}
 	};
 
+	const handleSubmitUnit = (data) => {
+		const programId = Number(searchParams.get('programId'));
+		if (!Number.isNaN(programId)) {
+			addUnit(programId, data).then((newUnit) => {
+				if (newUnit) {
+					setSteps([...steps, newUnit]);
+					setFilteredSteps([...filteredSteps, newUnit]);
+				}
+			});
+		}
+	};
+
 	return (
 		<>
 			<Box paddingRight='.5rem'>
@@ -103,21 +118,7 @@ export default function ProgramSteps() {
 						</IconButton>
 					</Tooltip>
 					<DialogForm
-						onSubmitSuccess={(data) => {
-							const programId = Number(searchParams.get('programId'));
-							if (!Number.isNaN(programId)) {
-								const newStep: Unit = {
-									id: Math.ceil(Math.random() * 150 + 10),
-									program_id: programId,
-									name: data,
-									status: 'Activo',
-									created: new Date(),
-									updated: new Date(),
-								};
-								setSteps([...steps, newStep]);
-								setFilteredSteps([...filteredSteps, newStep]);
-							}
-						}}
+						onSubmitSuccess={handleSubmitUnit}
 						title='Añadir un paso'
 						fieldLabel='Nombre del paso'
 						open={addStepDialogOpen}

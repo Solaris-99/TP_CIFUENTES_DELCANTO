@@ -179,14 +179,47 @@ export const getPatientPrograms = async (
 	}
 };
 
+export const getPatientProgram = async (
+	programId: number
+): Promise<Program> => {
+	try {
+		const program = await patientProgramEndpoints.getById(programId);
+		if (!program) {
+			throw new Error('Programa no encontrado.');
+		}
+		return program.data;
+	} catch (error: unknown) {
+		let message = 'Error al obtener el programa del paciente.';
+		if (isAxiosError<ApiErrorResponse>(error)) {
+			message = error.response?.data?.message || message;
+		}
+		console.log(error);
+		throw new Error(message);
+	}
+};
+
 export const addPatientProgram = async (
 	patientId: number,
-	program: Program
-) => {
+	name: string
+): Promise<Program> => {
 	try {
-		return await patientProgramEndpoints.add(patientId, program);
+		const response = await patientProgramEndpoints.add(patientId, name);
+		return response.data;
 	} catch (error: unknown) {
 		let message = 'Error al agregar un programa.';
+		if (isAxiosError<ApiErrorResponse>(error)) {
+			message = error.response?.data?.message || message;
+		}
+		console.log(error);
+		throw new Error(message);
+	}
+};
+
+export const removeProgram = async (programId: number) => {
+	try {
+		return await patientProgramEndpoints.remove(programId);
+	} catch (error: unknown) {
+		let message = 'Error al eliminar el programa.';
 		if (isAxiosError<ApiErrorResponse>(error)) {
 			message = error.response?.data?.message || message;
 		}
@@ -217,18 +250,35 @@ export const updateProgramStatus = async (
 };
 
 export const updateProgramBackground = async (
-	patientId: number,
 	programId: number,
 	background: string
 ) => {
 	try {
 		return await patientProgramEndpoints.updateBackground(
-			patientId,
 			programId,
 			background
 		);
 	} catch (error: unknown) {
 		let message = 'Error al actualizar los antecedentes del programa.';
+		if (isAxiosError<ApiErrorResponse>(error)) {
+			message = error.response?.data?.message || message;
+		}
+		console.log(error);
+		throw new Error(message);
+	}
+};
+
+export const getProgramBackground = async (
+	programId: number
+): Promise<string> => {
+	try {
+		const response = await patientProgramEndpoints.getById(programId);
+		if (!response.data) {
+			throw new Error('Programa no encontrado.');
+		}
+		return response.data.antecedent || '';
+	} catch (error: unknown) {
+		let message = 'Error al obtener los antecedentes del programa.';
 		if (isAxiosError<ApiErrorResponse>(error)) {
 			message = error.response?.data?.message || message;
 		}
@@ -262,12 +312,12 @@ export const getProgramUnits = async (
 };
 
 export const addUnit = async (
-	patientId: number,
 	programId: number,
-	unit: Unit
-) => {
+	name: string
+): Promise<Unit> => {
 	try {
-		return await patientUnitsEndpoints.add(patientId, programId, unit);
+		const response = await patientUnitsEndpoints.add(programId, name);
+		return response.data;
 	} catch (error: unknown) {
 		let message = 'Error al agregar unidad.';
 		if (isAxiosError<ApiErrorResponse>(error)) {

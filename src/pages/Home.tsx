@@ -21,7 +21,7 @@ const Home = () => {
 		if (localStorage.getItem('role') === 'coordinator') {
 			getPatients().then((data) => setAllPatients(data));
 		}
-	});
+	}, []);
 
 	const [createPatientModalOpen, setCreatePatientModalOpen] = useState(false);
 

@@ -18,6 +18,9 @@ export interface Program {
 	name: string;
 	antecedent: string;
 	status: Status;
+	unit_count: number;
+	unit_active_count: number;
+	unit_completed_count: number;
 }
 
 export interface Registry {

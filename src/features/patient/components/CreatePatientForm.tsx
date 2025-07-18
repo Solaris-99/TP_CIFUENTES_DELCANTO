@@ -18,7 +18,7 @@ import {
 interface CreatePatientFormProps {
 	open: boolean;
 	handleClose: () => void;
-	onSubmitSuccess: () => void;
+	onSubmitSuccess: (data: CreatePatientValues) => void;
 }
 
 const CreatePatientForm: FC<CreatePatientFormProps> = ({
@@ -40,10 +40,8 @@ const CreatePatientForm: FC<CreatePatientFormProps> = ({
 
 	const onSubmit = async (data: CreatePatientValues) => {
 		try {
-			//const newPatient: Patient = {...} //agregar fechas
-			//const response = await createPatient(data);
+			onSubmitSuccess(data);
 			reset();
-			onSubmitSuccess();
 		} catch (error) {
 			console.error('Error al crear paciente:', error);
 			setError(

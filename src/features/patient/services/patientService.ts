@@ -16,6 +16,7 @@ import type {
 } from '@/features/patient/types/program';
 import type { Therapist } from '@/features/therapist/types/therapistsTypes';
 import { isAxiosError } from 'axios';
+import type { CreatePatientValues } from '../schema/createPatientSchema';
 
 export const getPatients = async (): Promise<Patient[]> => {
 	try {
@@ -87,7 +88,9 @@ export const deletePatient = async (id: number) => {
 	}
 };
 
-export const createPatient = async (patient: Patient): Promise<Patient> => {
+export const createPatient = async (
+	patient: CreatePatientValues
+): Promise<Patient> => {
 	try {
 		const response = await patientsEndpoints.create(patient);
 		const p = response.data;

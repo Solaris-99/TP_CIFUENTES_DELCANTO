@@ -3,6 +3,7 @@ import type { Patient } from '@/features/patient/types/patient';
 
 import CreatePatientForm from '@/features/patient/components/CreatePatientForm';
 import {
+	createPatient,
 	getCurrentUserPatients,
 	getPatients,
 } from '@/features/patient/services/patientService';
@@ -68,8 +69,11 @@ const Home = () => {
 			<CreatePatientForm
 				open={createPatientModalOpen}
 				handleClose={() => setCreatePatientModalOpen(false)}
-				onSubmitSuccess={() => {
-					console.log('paciente creado');
+				onSubmitSuccess={(patientData) => {
+					createPatient(patientData).then((newPatient) => {
+						setAllPatients([...allPatients, newPatient]);
+						setCreatePatientModalOpen(false);
+					});
 				}}
 			/>
 		</>

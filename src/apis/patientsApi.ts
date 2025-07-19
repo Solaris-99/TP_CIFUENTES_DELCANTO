@@ -1,3 +1,4 @@
+import type { CreatePatientValues } from '@/features/patient/schema/createPatientSchema';
 import type { Patient } from '@/features/patient/types/patient';
 import type {
 	Program,
@@ -15,7 +16,8 @@ export const patientsEndpoints = {
 	getByCurrentUser: () => api.get<Patient[]>('/patients/myPatients'),
 	getAll: () => api.get<Patient[]>('/patients/'),
 	delete: (id: number) => api.delete(`/patients/${id}`),
-	create: (patient: Patient) => api.post<Patient>('/patients/', patient),
+	create: (patient: CreatePatientValues) =>
+		api.post<Patient>('/patients/', patient),
 };
 
 export const patientTeamEndpoints = {

@@ -4,8 +4,8 @@ export type RegistryValues = 'NR' | '+' | '-';
 export interface Unit {
 	id: number;
 	program_id: number;
-	created: Date;
-	updated: Date;
+	date_created: Date;
+	last_updated: Date;
 	name: string;
 	status: Status;
 }

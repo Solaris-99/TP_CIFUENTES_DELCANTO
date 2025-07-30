@@ -167,7 +167,7 @@ const ProgramAssignment = () => {
 										primary: { fontWeight: 'bold', paddingRight: '2rem' },
 									}}
 									primary={program.name}
-									secondary='3 sesiones'
+									secondary={`Inicio: ${program.date_creation.toLocaleString('es-AR', { dateStyle: 'medium' })} Ultima actualización: ${program.last_updated ? program.last_updated.toLocaleString('es-AR', { dateStyle: 'medium' }) : ' - '}`}
 								/>
 							</ListItemButton>
 						</ListItem>

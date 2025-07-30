@@ -163,7 +163,10 @@ export default function ProgramSteps() {
 								onClick={() => handleStepSelect(step)}
 								sx={{ paddingInline: '.5rem' }}
 							>
-								<ListItemText primary={step.name} />
+								<ListItemText
+									primary={step.name}
+									secondary={`Inicio: ${step.date_created.toLocaleString('es-AR', { dateStyle: 'medium' })}`}
+								/>
 							</ListItemButton>
 						</ListItem>
 					))}

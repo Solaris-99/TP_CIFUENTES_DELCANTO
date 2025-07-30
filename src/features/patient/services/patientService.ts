@@ -300,8 +300,8 @@ export const getProgramUnits = async (
 		const response = await patientUnitsEndpoints.get(patientId, programId);
 		const units = response.data.map((unit) => ({
 			...unit,
-			created: new Date(unit.created),
-			updated: new Date(unit.updated),
+			date_created: new Date(unit.date_created),
+			last_updated: new Date(unit.last_updated),
 		}));
 		return units;
 	} catch (error: unknown) {

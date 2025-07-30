@@ -1,10 +1,7 @@
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import PositiveIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import PlusIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import NegativeIcon from '@mui/icons-material/HighlightOffRounded';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import NeutralIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
+import MinusIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import { Box, IconButton, Paper, Typography } from '@mui/material';
 import type { FC } from 'react';
 import type { RegistryValues } from '../types/program';
@@ -20,19 +17,19 @@ const getStyles = (type: RegistryValues) => {
 	switch (type) {
 		case '+':
 			return {
-				icon: <PositiveIcon sx={{ color: '#2e7d32' }} fontSize='small' />,
+				icon: <PlusIcon sx={{ color: '#2e7d32' }} fontSize='small' />,
 				bgColor: '#e8f5e9',
 				color: '#2e7d32',
 			};
 		case '-':
 			return {
-				icon: <NegativeIcon sx={{ color: '#c62828' }} fontSize='small' />,
+				icon: <MinusIcon sx={{ color: '#c62828' }} fontSize='small' />,
 				bgColor: '#ffebee',
 				color: '#c62828',
 			};
 		case 'NR':
 			return {
-				icon: <NeutralIcon sx={{ color: '#757575' }} fontSize='small' />,
+				icon: <NegativeIcon sx={{ color: '#757575' }} fontSize='small' />,
 				bgColor: '#f5f5f5',
 				color: '#424242',
 			};

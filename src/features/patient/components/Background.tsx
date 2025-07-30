@@ -47,7 +47,7 @@ const Background = () => {
 		<Paper variant='outlined' sx={{ padding: '1rem', height: '100%' }}>
 			<Box display='flex' justifyContent='space-between'>
 				<Typography variant='h5' component='h2'>
-					Antecedentes
+					Antecedente
 				</Typography>
 				{!isEditing ? (
 					<IconButton onClick={handleEditClick}>
